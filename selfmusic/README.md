@@ -1,3 +1,3 @@
 # self
 
-> A Vue.js project
+> A Vue.js project打算
