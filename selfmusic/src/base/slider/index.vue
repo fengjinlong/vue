@@ -1,6 +1,6 @@
 <template>
   <div class="slider" ref="slider">
-    <div class="slider-group" ref="sliderGroup" class="slider-item">
+    <div class="slider-group slider-item" ref="sliderGroup">
       <slot>
       </slot> 
     </div>
@@ -11,11 +11,11 @@
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
+  // import BScroll from 'better-scroll'
   // import {addClass} from 'common/js/dom'
 
   export default {
-  	data () {
+    data () {
       return {
         dots: [],
         currentPageIndex: 0
@@ -37,17 +37,15 @@
     },
     mounted () {
       setTimeout(() => {
-      	this._setSliderWidth()
-      	this._initDots()
-      	this._initSlider()//////////////////////////////////
-      },20)
+        this._setSliderWidth()
+        this._initDots()
+        // this._initSlider()
+      }, 20)
     },
     methods: {
       _setSliderWidth (isResize) {
-      	//图个数
         this.children = this.$refs.sliderGroup.children
         let width = 0
-        //屏幕宽
         let sliderWidth = this.$refs.slider.clientWidth
         for (let i = 0; i < this.children.length; i++) {
           let child = this.children[i]
@@ -61,11 +59,10 @@
         this.$refs.sliderGroup.style.width = width + 'px'
       },
       _initDots () {
-      	this.dots = new Array(this.children.length)
+        this.dots = new Array(this.children.length)
       }
     }
   }
-
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

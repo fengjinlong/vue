@@ -16,10 +16,10 @@
   import Scrcll from '@/base/scroll'
   import Slider from 'base/slider'
   export default {
-  	components: {
-  	  Scrcll,
-  	  Slider
-  	}
+    components: {
+      Scrcll,
+      Slider
+    }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
