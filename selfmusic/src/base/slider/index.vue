@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  // import BScroll from 'better-scroll'
+  import BScroll from 'better-scroll'
   // import {addClass} from 'common/js/dom'
 
   export default {
@@ -39,7 +39,7 @@
       setTimeout(() => {
         this._setSliderWidth()
         this._initDots()
-        // this._initSlider()
+        this._initSlider()
       }, 20)
     },
     methods: {
@@ -60,6 +60,19 @@
       },
       _initDots () {
         this.dots = new Array(this.children.length)
+      },
+      _initSlider () {
+        this.slider = new BScroll(this.$refs.slider, {
+          scrollX: true,
+          scrollY: false,
+          // 当快速滑动时是否开启滑动惯性
+          momentum: false,
+          snap: { 
+            loop: this.loop, 
+            threshold: 0.3, 
+            speed: 400 
+          } 
+        })
       }
     }
   }
