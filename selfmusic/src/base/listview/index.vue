@@ -1,14 +1,20 @@
 <template>
-  <div class="singer">
-  	<ListView :data="singers"></ListView>
-  </div>
+  <Scroll class="singer"
+          :data="data">
+  </Scroll>
 </template>
 
 <script>
-  import ListView from 'base/listview'
+  import Scroll from 'base/scroll'
   export default {
+    props: {
+      data: {
+        type: Array,
+        default: []
+      }
+    }
     components: {
-      ListView
+      Scroll
     }
   }
 </script>
