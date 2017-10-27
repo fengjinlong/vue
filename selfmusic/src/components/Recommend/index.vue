@@ -58,12 +58,13 @@
       }, 20)
     },
     methods: {
-      handlePlaylist (playlist) {
-        const bottom = playlist.length > 0 ? '60px' : ''
+      // 还没有用到minxin
+      // handlePlaylist (playlist) {
+      //   const bottom = playlist.length > 0 ? '60px' : ''
 
-        this.$refs.recommend.style.bottom = bottom
-        this.$refs.scroll.refresh()
-      },
+      //   this.$refs.recommend.style.bottom = bottom
+      //   this.$refs.scroll.refresh()
+      // },
       _getRecommend () {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
@@ -79,6 +80,13 @@
           }, 20)
         }
       },
+      // 还没用到
+      // selectItem (item) {
+      //   this.$router.push({
+      //     path: `/recommend/${item.dissid}`
+      //   })
+      //   this.setDisc(item)
+      // },
       _getDiscList () {
         getDiscList().then((res) => {
           if (res.code === ERR_OK) {
