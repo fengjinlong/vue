@@ -1,6 +1,8 @@
 <template>
   <div class="singer">
-  	<ListView @select="selectSinger" :dataa="singers"></ListView>
+  	<ListView @select="selectSinger" :pdata="singers"></ListView>
+  	<!-- 挂载子路由 -->
+  	<router-view></router-view>
   </div>
 </template>
 

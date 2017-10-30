@@ -1,12 +1,12 @@
 <template>
   <Scroll class="listview"
-          :data="dataa"
+          :data="pdata"
           ref="listview"
           :listenScroll="listenScroll"
           @scrollP="scroll"
           :probeType="probeType">
           <ul>
-            <li ref='listGroup' v-for='group in dataa' class='list-group'>
+            <li ref='listGroup' v-for='group in pdata' class='list-group'>
               <h2 class='list-group-title'>{{group.title}}</h2>
               <ul>
                 <li @click="selectItem(item)" v-for="item in group.items" class="list-group-item">
@@ -16,16 +16,31 @@
               </ul>
             </li>
           </ul>
+          <div @touchmove.stop.prevent="onShortcutTouchMove" @touchstart="onShortcutTouchStartdiv" class="list-shortcut">
+            <ul>
+        <li @touchstart="onShortcutTouchStart(index)"
+            :data-index="index"
+            class="item" 
+            :class="{'current' : currentIndex===index}"
+            v-for="(item,index) in shortcutList">
+          {{item}}
+        </li>
+      </ul>
+          </div>
           <div class="list-fixed" v-show="fixedTitle" ref="fixed">
-      <h1 class="fixed-title">{{fixedTitle}}</h1>
-    </div>
+            <h1 class="fixed-title">{{fixedTitle}}</h1>
+          </div>
   </Scroll>
 </template>
 
 <script>
   import Scroll from 'base/scroll'
+
+  const ANCHOR_HEIGHT = 18
+  const TITLE_HEIGHT = 30
   export default {
     created () {
+      // touch存取触点y值
       this.touch = {}
       this.listenScroll = true
       this.listHeight = []
@@ -39,26 +54,102 @@
       }
     },
     computed: {
+      shortcutList () {
+        return this.pdata.map((group) => {
+          return group.title.substr(0, 1)
+        })
+      },
       fixedTitle () {
-        console.log(this.data)
+        // console.log(this.pdata)
         if (this.scrollY > 0) {
           return ''
         }
-        return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+        return this.pdata[this.currentIndex] ? this.pdata[this.currentIndex].title : ''
+      }
+    },
+    watch: {
+      // 监听歌手列表的滚动
+      scrollY (newY) {
+        const listHeight = this.listHeight
+        // 滚动到顶部 newY>0
+        if (newY > 0) {
+          this.currentIndex = 0
+          return
+        }
+        // 滚动到中间部分
+        for (let i = 0; i < listHeight.length - 1; i++) {
+          let height1 = listHeight[i]
+          let height2 = listHeight[i + 1]
+          if (-newY >= height1 && -newY < height2) {
+            this.currentIndex = i
+            this.diff = height2 + newY
+            return
+          }
+        }
+      // 滚动到底部 -newY 大于最后一个元素的上限
+        this.currentIndex = listHeight.length - 2
+      },
+      pdata () {
+        setTimeout(() => {
+          this._calculateHeight()
+        }, 20)
+      },
+      diff (newVal) {
+        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+        if (this.fixedTop === fixedTop) {
+          return
+        }
+        this.fixedTop = fixedTop
+        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
       }
     },
     props: {
-      dataa: {
+      pdata: {
         type: Array,
         default: []
       }
     },
     methods: {
+      _scrollTo (index) {
+        if (!index && index !== 0) {
+          return
+        }
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
+        this.scrollY = this.$refs.listview.scroll.y
+      },
+      onShortcutTouchStartdiv (e) {
+        // 获取y
+        let firstTouch = e.touches[0]
+        this.touch.y1 = firstTouch.pageY
+      },
+      onShortcutTouchMove (e) {
+        let firstTouch = e.touches[0]
+        this.touch.y2 = firstTouch.pageY
+        let data = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+        this._scrollTo(this.touch.beginIndex + data)
+      },
+      // 直接滚到目标
+      onShortcutTouchStart (index) {
+        this._scrollTo(index)
+        this.touch.beginIndex = index
+      },
       selectItem (item) {
         this.$emit('select', item)
       },
       scroll (pos) {
         this.scrollY = pos.y
+      },
+      // 数据变动改变滑动长度
+      _calculateHeight () {
+        this.listHeight = []
+        const list = this.$refs.listGroup
+        let height = 0
+        this.listHeight.push(height)
+        for (let i = 0; i < list.length; i++) {
+          let item = list[i]
+          height += item.clientHeight
+          this.listHeight.push(height)
+        }
       }
     },
     components: {
