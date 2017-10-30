@@ -1,12 +1,12 @@
 <template>
   <Scroll class="listview"
-          :data="data"
+          :data="dataa"
           ref="listview"
           :listenScroll="listenScroll"
           @scrollP="scroll"
           :probeType="probeType">
           <ul>
-            <li ref='listGroup' v-for='group in data' class='list-group'>
+            <li ref='listGroup' v-for='group in dataa' class='list-group'>
               <h2 class='list-group-title'>{{group.title}}</h2>
               <ul>
                 <li @click="selectItem(item)" v-for="item in group.items" class="list-group-item">
@@ -16,6 +16,9 @@
               </ul>
             </li>
           </ul>
+          <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+      <h1 class="fixed-title">{{fixedTitle}}</h1>
+    </div>
   </Scroll>
 </template>
 
@@ -28,8 +31,24 @@
       this.listHeight = []
       this.probeType = 3
     },
+    data () {
+      return {
+        scrollY: -1,
+        currentIndex: 0,
+        diff: -1
+      }
+    },
+    computed: {
+      fixedTitle () {
+        console.log(this.data)
+        if (this.scrollY > 0) {
+          return ''
+        }
+        return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
+      }
+    },
     props: {
-      data: {
+      dataa: {
         type: Array,
         default: []
       }
@@ -38,7 +57,8 @@
       selectItem (item) {
         this.$emit('select', item)
       },
-      scroll () {
+      scroll (pos) {
+        this.scrollY = pos.y
       }
     },
     components: {
