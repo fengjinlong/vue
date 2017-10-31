@@ -27,6 +27,7 @@
     },
     methods: {
       selectSinger (singer) {
+        console.log(66)
         this.$router.push({
           path: `/singer/${singer.id}`
         })

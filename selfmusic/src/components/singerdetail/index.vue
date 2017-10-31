@@ -9,7 +9,7 @@
   import {getSingerDetail} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
-  import MusicList from 'components/music-list'
+  import MusicList from 'components/musiclist'
 
   export default {
     data () {
@@ -33,11 +33,13 @@
     },
     methods: {
       _getDetail () {
+        console.log(this.singer)
         if (!this.singer.id) {
           this.$router.push('./singer')
           return
         }
         getSingerDetail(this.singer.id).then((res) => {
+          console.log(res.data.list)
           if (res.code === ERR_OK) {
             this.songs = this._normalizeSongs(res.data.list)
           }

@@ -14,6 +14,7 @@
   import Scroll from 'base/scroll'
   // import SongList from 'base/songlist'
   import {prefixStyle} from 'common/js/dom'
+
   const RESERVED_HEIGHT = 40
   const transform = prefixStyle('transform')
 
