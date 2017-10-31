@@ -2,9 +2,11 @@ import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import fastclick from 'fastclick'
 import VuelazyLoad from 'vue-lazyload'
 import './common/stylus/index.styl'
+
 Vue.config.productionTip = false
 
 fastclick.attach(document.body)
@@ -15,5 +17,6 @@ Vue.use(VuelazyLoad, {
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })
