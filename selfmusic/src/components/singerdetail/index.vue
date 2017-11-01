@@ -18,15 +18,15 @@
       }
     },
     computed: {
-      ...mapGetters([
-        'singer'
-      ]),
       title () {
         return this.singer.name
       },
       bgImage () {
         return this.singer.avatar
-      }
+      },
+      ...mapGetters([
+        'singer'
+      ])
     },
     created () {
       this._getDetail()

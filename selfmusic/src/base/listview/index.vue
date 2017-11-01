@@ -30,15 +30,25 @@
           <div class="list-fixed" v-show="fixedTitle" ref="fixed">
             <h1 class="fixed-title">{{fixedTitle}}</h1>
           </div>
+          <div v-show="!pdata.length" class="loading-container"> 
+            <loading></loading> 
+          </div> 
   </Scroll>
 </template>
 
 <script>
   import Scroll from 'base/scroll'
+  import Loading from 'base/loading'
 
   const ANCHOR_HEIGHT = 18
   const TITLE_HEIGHT = 30
   export default {
+    props: {
+      pdata: {
+        type: Array,
+        default: []
+      }
+    },
     created () {
       // touch存取触点y值
       this.touch = {}
@@ -65,48 +75,6 @@
           return ''
         }
         return this.pdata[this.currentIndex] ? this.pdata[this.currentIndex].title : ''
-      }
-    },
-    watch: {
-      // 监听歌手列表的滚动
-      scrollY (newY) {
-        const listHeight = this.listHeight
-        // 滚动到顶部 newY>0
-        if (newY > 0) {
-          this.currentIndex = 0
-          return
-        }
-        // 滚动到中间部分
-        for (let i = 0; i < listHeight.length - 1; i++) {
-          let height1 = listHeight[i]
-          let height2 = listHeight[i + 1]
-          if (-newY >= height1 && -newY < height2) {
-            this.currentIndex = i
-            this.diff = height2 + newY
-            return
-          }
-        }
-      // 滚动到底部 -newY 大于最后一个元素的上限
-        this.currentIndex = listHeight.length - 2
-      },
-      pdata () {
-        setTimeout(() => {
-          this._calculateHeight()
-        }, 20)
-      },
-      diff (newVal) {
-        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
-        if (this.fixedTop === fixedTop) {
-          return
-        }
-        this.fixedTop = fixedTop
-        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
-      }
-    },
-    props: {
-      pdata: {
-        type: Array,
-        default: []
       }
     },
     methods: {
@@ -152,8 +120,45 @@
         }
       }
     },
+    watch: {
+      // 监听歌手列表的滚动
+      scrollY (newY) {
+        const listHeight = this.listHeight
+        // 滚动到顶部 newY>0
+        if (newY > 0) {
+          this.currentIndex = 0
+          return
+        }
+        // 滚动到中间部分
+        for (let i = 0; i < listHeight.length - 1; i++) {
+          let height1 = listHeight[i]
+          let height2 = listHeight[i + 1]
+          if (-newY >= height1 && -newY < height2) {
+            this.currentIndex = i
+            this.diff = height2 + newY
+            return
+          }
+        }
+      // 滚动到底部 -newY 大于最后一个元素的上限
+        this.currentIndex = listHeight.length - 2
+      },
+      pdata () {
+        setTimeout(() => {
+          this._calculateHeight()
+        }, 20)
+      },
+      diff (newVal) {
+        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+        if (this.fixedTop === fixedTop) {
+          return
+        }
+        this.fixedTop = fixedTop
+        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
+      }
+    },
     components: {
-      Scroll
+      Scroll,
+      Loading
     }
   }
 </script>

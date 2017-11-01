@@ -1,23 +1,22 @@
 <template>
     <div class="music-list">
-    <div class="back" >
-      <i class="icon-back"></i>
+      <div class="back" >
+        <i class="icon-back"></i>
+      </div>
+      <h1 class="title" v-html="title"></h1>
+      <div class="bg-image" :style="bgStyle" ref="bgImage">
+        <div class="filter"></div>
+      </div>
+      <div class="bg-layer" ref="layer"></div>
     </div>
-    <h1 class="title" v-html="title"></h1>
-    <div class="bg-image" :style="bgStyle" ref="bgImage">
-      <div class="filter"></div>
-    </div>
-    <div class="bg-layer" ref="layer"></div>
 </template>
 
 <script>
   import Scroll from 'base/scroll'
   // import SongList from 'base/songlist'
-  import {prefixStyle} from 'common/js/dom'
-
-  const RESERVED_HEIGHT = 40
-  const transform = prefixStyle('transform')
-
+  // import {prefixStyle} from 'common/js/dom'
+  // const RESERVED_HEIGHT = 40
+  // const transform = prefixStyle('transform')
   export default {
     props: {
       bgImage: {
@@ -35,6 +34,7 @@
     },
     computed: {
       bgStyle () {
+        console.log(6)
         console.log(this.songs)
         return `background-image:url(${this.bgImage})`
       }

@@ -27,13 +27,14 @@
     },
     methods: {
       selectSinger (singer) {
-        console.log(66)
+        console.log(7)
         this.$router.push({
           path: `/singer/${singer.id}`
         })
         this.setSinger(singer)
       },
       _getSingerList () {
+        // ok
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
             this.singers = this._normalizeSinger(res.data.list)
