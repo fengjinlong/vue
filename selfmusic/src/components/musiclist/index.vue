@@ -8,16 +8,33 @@
         <div class="filter"></div>
       </div>
       <div class="bg-layer" ref="layer"></div>
+      <Scroll @scrollP="scroll" :probeType="probeType" :listenScroll="listenScroll" :data="songs" class="list" ref='list'>
+        <!-- :data 绑定data,传给子组件,子组件进行监听，改变后scroll进行刷新 -->
+        <div class="song-list-wrapper">
+          <SongList :songs="songs"></SongList>
+        </div>
+      </Scroll>
     </div>
 </template>
 
 <script>
   import Scroll from 'base/scroll'
-  // import SongList from 'base/songlist'
-  // import {prefixStyle} from 'common/js/dom'
-  // const RESERVED_HEIGHT = 40
-  // const transform = prefixStyle('transform')
+  import SongList from 'base/songlist'
+  import {prefixStyle} from 'common/js/dom'
+  const RESERVED_HEIGHT = 40
+  const transform = prefixStyle('transform')
+  const backdrop = prefixStyle('backdrop-filter')
+
   export default {
+    data () {
+      return {
+        scrollY: 0
+      }
+    },
+    created () {
+      this.probeType = 3
+      this.listenScroll = true
+    },
     props: {
       bgImage: {
         type: String,
@@ -32,22 +49,58 @@
         default: ''
       }
     },
+    mounted () {
+      this.imageHeight = this.$refs.bgImage.clientHeight
+      this.mintranslateY = -this.imageHeight + RESERVED_HEIGHT
+      this.$refs.list.$el.style.top = `${this.imageHeight}px`
+    },
     computed: {
       bgStyle () {
-        console.log(6)
-        console.log(this.songs)
         return `background-image:url(${this.bgImage})`
       }
     },
+    methods: {
+      scroll (pos) {
+        this.scrollY = pos.y
+      }
+    },
+    watch: {
+      scrollY (newy) {
+        let translateY = Math.max(this.mintranslateY, newy)
+        let zIndex = 0
+        let scale = 1
+        let blur = 0
+        this.$refs.layer.style[transform] = `translate3d(0,${translateY}px,0)`
+        const percent = Math.abs(newy / this.imageHeight)
+        if (newy > 0) {
+          scale = 1 + percent
+          zIndex = 10
+        } else {
+          blur = Math.min(20 * percent, 20)
+        }
+        this.$refs.filter.style[backdrop] = `blur(${blur}px)`
+        if (newy < this.mintranslateY) {
+          zIndex = 10
+          this.$refs.bgImage.style.paddingTop = 0
+          this.$refs.bgImage.style.height = `${RESERVED_HEIGHT}px`
+        } else {
+          this.$refs.bgImage.style.paddingTop = '70%'
+          this.$refs.bgImage.style.height = 0
+        }
+        this.$refs.bgImage.style[transform] = `scale(${scale})`
+        this.$refs.bgImage.style.zIndex = zIndex
+      }
+    },
     components: {
-      Scroll
+      Scroll,
+      SongList
     }
   }
 </script>
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
- .music-list
+  .music-list
     position: fixed
     z-index: 100
     top: 0
@@ -119,7 +172,7 @@
       height: 100%
       background: $color-background
     .list
-      position: fixed
+      position: absolute
       top: 0
       bottom: 0
       width: 100%

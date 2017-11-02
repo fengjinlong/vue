@@ -35,7 +35,7 @@
       _getDetail () {
         console.log(this.singer)
         if (!this.singer.id) {
-          this.$router.push('./singer')
+          this.$router.push('/singer')
           return
         }
         getSingerDetail(this.singer.id).then((res) => {
@@ -63,6 +63,14 @@
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
+  div
+    position fixed
+    top 0
+    bottom 0
+    right 0
+    left 0
+    background-color red
+    z-index 100
   .slide-enter-active,.slide-leave-active
     transition all 0.3s
   .slide-enter,.slide-leave-to
