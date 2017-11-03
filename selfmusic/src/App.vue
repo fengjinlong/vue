@@ -5,16 +5,19 @@
   	<keep-alive>
   	  <router-view></router-view>
   	</keep-alive>
+    <Player></Player>
   </div>
 </template>
 
 <script>
 import HeaderV from 'components/header'
 import Tab from 'components/tab'
+import Player from 'components/player'
 export default {
   components: {
     HeaderV,
-    Tab
+    Tab,
+    Player
   }
 }
 </script>
