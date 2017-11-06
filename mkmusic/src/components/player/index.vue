@@ -1,15 +1,24 @@
 <template>
-  <div class="player">
-    <div class="normal-player">
+  <div class="player" v-show="playList.length>0">
+    <div class="normal-player" v-show="fullScreen">
       播放器
     </div>
-    <div class="mini-player">
+    <div class="mini-player" v-show="!fullScreen">
     </div>
   </div>
 </template>
 
 <script>
-  export default {}
+  import {mapGetters} from 'vuex'
+  
+  export default {
+    computed: {
+      ...mapGetters([
+        'playList',
+        'fullScreen'
+      ])
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

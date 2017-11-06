@@ -18,7 +18,7 @@
     </div>
     <scroll @scrollP="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref='list'>
       <div class="song-list-wrapper">
-        <SongList :songs="songs"></SongList>
+        <SongList @select="selectItem" :songs="songs"></SongList>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -72,6 +72,9 @@ export default {
     this.$refs.list.$el.style.top = `${this.imageHeight}px`
   },
   methods: {
+    selectItem (item, index) {
+      
+    },
     scroll (pos) {
       this.scrollY = pos.y
     },
