@@ -32,6 +32,8 @@ import Scroll from 'base/scroll'
 import loading from 'base/loading'
 import SongList from 'base/song-list'
 import {prefixStyle} from 'common/js/dom'
+import {mapActions} from 'vuex'
+
 const RESERVED_HEIGHT = 40
 const transform = prefixStyle('transform')
 const backdrop = prefixStyle('backdrop-filter')
@@ -72,15 +74,21 @@ export default {
     this.$refs.list.$el.style.top = `${this.imageHeight}px`
   },
   methods: {
-    selectItem (item, index) {
-      
-    },
     scroll (pos) {
       this.scrollY = pos.y
     },
     back () {
       this.$router.back()
-    }
+    },
+    selectItem (item, index) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   watch: {
     scrollY (newy) {
