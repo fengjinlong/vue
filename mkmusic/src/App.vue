@@ -12,7 +12,7 @@
 <script>
 import MHeader from 'components/m-header'
 import Tab from 'components/tab'
-import Player from 'components/Player'
+import Player from 'components/player'
 
 export default {
   components: {

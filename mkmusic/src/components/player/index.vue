@@ -1,28 +1,28 @@
 <template>
-  <div class="player" v-show="1">{{currentSong}}
+  <div class="player" :d="playlist" v-show="playlist.length > 0">
+    <!-- {{currentSong}} -->
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
-          <img width="100%" height="100%" :src="currentSong">
+          <img width="100%" height="100%" :src="currentSong.image">
         </div>
         <div class="top">
           <div class="back">
             <i class="icon-back"></i>
           </div>
-          <h1 class="title" v-html="currentSong"></h1>
-          <h2 class="subtitle"  v-html="currentSong"></h2>
+          <h1 class="title" v-html="currentSong.name"></h1>
+          <h2 class="subtitle"  v-html="currentSong.singer"></h2>
         </div>
         <div class="middle">
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" ref="imageWrapper">
-                <img ref="image" class="image" :src="currentSong">
+                <img ref="image" class="image" :src="currentSong.image">
               </div>
             </div>
             <div class="playing-lyric-wrapper">
               <div class="playing-lyric"></div>
             </div>
           </div>
-          <!-- <scroll class="middle-r" ref="lyricList"> -->
             <div class="lyric-wrapper">
               <div>
                 <p ref="lyricLine"class="text"></p>
@@ -31,7 +31,6 @@
                 <p></p>
               </div>
             </div>
-          <!-- </scroll> -->
         </div>
         <div class="bottom">
           <div class="operators">
@@ -56,12 +55,12 @@
       <div class="mini-player" v-show="!fullScreen">
         <div class="icon">
           <div class="imgWrapper" ref="miniWrapper">
-            <img ref="miniImage" width="40" height="40" :src="currentSong">
+            <img ref="miniImage" width="40" height="40" :src="currentSong.image">
           </div>
         </div>
         <div class="text">
-          <h2 class="name" v-html="currentSong"></h2>
-          <p class="desc"  v-html="currentSong"></p>
+          <h2 class="name" v-html="currentSong.name"></h2>
+          <p class="desc"  v-html="currentSong.singer"></p>
         </div>
         <div class="control">
         </div>
@@ -74,14 +73,10 @@
 
 <script>
   import {mapGetters} from 'vuex'
-  
   export default {
-    mounted () {
-      console.log(this.currentSong)
-    },
     computed: {
       ...mapGetters([
-        'playList',
+        'playlist',
         'fullScreen',
         'currentSong'
       ])
