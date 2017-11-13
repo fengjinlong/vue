@@ -1,12 +1,12 @@
 <template>
-  <div class="player" :d="playlist" v-show="playlist.length > 0">
-    <!-- {{currentSong}} -->
+  <div class="player" v-show="playlist.length > 0">
+    <transition name="normal">
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
           <img width="100%" height="100%" :src="currentSong.image">
         </div>
         <div class="top">
-          <div class="back">
+          <div class="back" @click="back">
             <i class="icon-back"></i>
           </div>
           <h1 class="title" v-html="currentSong.name"></h1>
@@ -35,24 +35,26 @@
         <div class="bottom">
           <div class="operators">
             <div class="icon i-left">
-              <i></i>
+              <i class="icon-sequence"></i>
             </div>
             <div class="icon i-left">
               <i class="icon-prev"></i>
             </div>
             <div class="icon i-center">
-              <i class="needsclick"></i>
+              <i class="icon-play"></i>
             </div>
             <div class="icon i-right">
               <i class="icon-next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon"></i>
+              <i class="icon icon-not-favorite"></i>
             </div>
           </div>
         </div>
       </div>
-      <div class="mini-player" v-show="!fullScreen">
+    </transition>
+    <transition name="mini">
+      <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
           <div class="imgWrapper" ref="miniWrapper">
             <img ref="miniImage" width="40" height="40" :src="currentSong.image">
@@ -68,11 +70,12 @@
           <i class="icon-playlist"></i>
         </div>
       </div>
+    </transition>
   </div>
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapMutations} from 'vuex'
   export default {
     computed: {
       ...mapGetters([
@@ -80,6 +83,17 @@
         'fullScreen',
         'currentSong'
       ])
+    },
+    methods: {
+      back () {
+        this.setFullScreen(false)
+      },
+      open () {
+        this.setFullScreen(true)
+      },
+      ...mapMutations({
+        setFullScreen: 'SET_FULL_SCREEN'
+      })
     }
   }
 </script>
