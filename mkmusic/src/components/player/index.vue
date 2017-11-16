@@ -38,10 +38,10 @@
             </div>
         </div>
         <div class="bottom">
-          <div class="<progress-wrapper">
+          <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <ProgressBar></ProgressBar>
+              <ProgressBar :percent="percent" @percentChange="onProgressBarChange"></ProgressBar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
@@ -117,6 +117,9 @@
       },
       disableCls () {
         return this.songReady ? '' : 'disable'
+      },
+      percent () {
+        return this.currentTime / this.currentSong.duration
       },
       ...mapGetters([
         'playlist',
@@ -251,6 +254,13 @@
           len++
         }
         return num
+      },
+      // 更改播放进度
+      onProgressBarChange (percent) {
+        this.$refs.audio.currentTime = this.currentSong.duration * percent
+        if (!this.playing) {
+          this.togglePlaying()
+        }
       }
     },
     watch: {
@@ -276,6 +286,7 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   @import "~common/stylus/mixin"
+  
   .player
     .normal-player
       position: fixed
@@ -346,10 +357,6 @@
               width: 100%
               height: 100%
               border-radius: 50%
-              &.play
-                animation rotate 20s linear infinite
-              &.pause
-                animation-play-state paused
               .image
                 position: absolute
                 left: 0
@@ -517,6 +524,7 @@
           position: absolute
           left: 0
           top: 0
+
   @keyframes rotate
     0%
       transform: rotate(0)
