@@ -41,13 +41,13 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <ProgressBar :percent="percent" @percentChange="onProgressBarChange"></ProgressBar>
+              <ProgressBar :clickmini="clickfullScreen" :percent="percent" @percentChange="onProgressBarChange"></ProgressBar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disableCls">
               <i @click="prev" class="icon-prev"></i>
@@ -77,7 +77,9 @@
           <p class="desc"  v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          <i @click.stop="togglePlaying" :class="miniIcon"></i>
+          <progressCircle :radius="radius" :percent="percent">
+            <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
+          </progressCircle>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
@@ -85,7 +87,8 @@
       </div>
     </transition>
     <!-- @canplay="ready"只有当歌曲ready时候，才能点下一首歌 -->
-    <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @canplay="ready" @error="error">
+    <!-- audio 自己派发ended（播放完）等事件   -->
+    <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @canplay="ready" @error="error" @ended="end">
     </audio>
   </div>
 </template>
@@ -93,19 +96,29 @@
 <script>
   import {mapGetters, mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
-
+  import progressCircle from 'base/progress-circle/progress-circle'
   import {prefixStyle} from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
+  import {playMode} from 'common/js/config'
+  import {shuffle} from 'common/js/util'
 
   const transform = prefixStyle('transform')
   export default {
     data () {
       return {
         songReady: false,
-        currentTime: 0
+        currentTime: 0,
+        radius: 32
       }
     },
     computed: {
+      iconMode () {
+        return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+      },
+      clickfullScreen () {
+        // 解决暂停切换出现小球位置不对的bug
+        return this.fullScreen
+      },
       cdCls () {
         return this.playing ? 'play' : 'play pause'
       },
@@ -126,10 +139,31 @@
         'fullScreen',
         'currentSong',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        // 原始列表
+        'sequenceList'
       ])
     },
     methods: {
+      changeMode () {
+        const mode = (this.mode + 1) % 3
+        this.setPlayMode(mode)
+        let list = null
+        if (mode === playMode.random) {
+          list = shuffle(this.sequenceList)
+        } else {
+          list = this.sequenceList
+        }
+        this.resetCurrentIndex(list)
+        this.setPlayList(list)
+      },
+      resetCurrentIndex (list) {
+        let index = list.findIndex((item) => {
+          return item.id === this.currentSong.id
+        })
+        this.setCurrentIndex(index)
+      },
       back () {
         this.setFullScreen(false)
       },
@@ -139,7 +173,9 @@
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX'
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setPlayMode: 'SET_PLAY_MODE',
+        setPlayList: 'SET_PLAYLIST'
       }),
       enter (el, done) {
         const {x, y, scale} = this._getPosAndScale()
@@ -198,6 +234,18 @@
       },
       togglePlaying () {
         this.setPlayState(!this.playing)
+      },
+      end () {
+        console.log('完毕')
+        if (this.mode === playMode.loop) {
+          this.loop()
+        } else {
+          this.next()
+        }
+      },
+      loop () {
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
       },
       next () {
         // 防止快速的点击
@@ -264,7 +312,10 @@
       }
     },
     watch: {
-      currentSong () {
+      currentSong (newSong, oldSong) {
+        if (newSong.id === oldSong.id) {
+          return
+        }
         // 延迟，因为dom没有加载上调用不了this.$refs.audio.play()
         this.$nextTick(() => {
           this.$refs.audio.play()
@@ -278,7 +329,8 @@
       }
     },
     components: {
-      ProgressBar
+      ProgressBar,
+      progressCircle
     }
   }
 </script>
@@ -357,6 +409,10 @@
               width: 100%
               height: 100%
               border-radius: 50%
+              &.play
+                animation: rotate 10s linear infinite
+              &.pause
+                animation-play-state: paused
               .image
                 position: absolute
                 left: 0

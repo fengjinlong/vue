@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-bar" ref="progressBar">
+  <div class="progress-bar" ref="progressBar" @click="progressClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
       <div class="progress-btn-wrapper"
@@ -23,6 +23,10 @@
       percent: {
         type: Number,
         default: 0
+      },
+      clickmini: {
+        type: Boolean,
+        default: false
       }
     },
     created () {
@@ -50,13 +54,19 @@
         this._triggerPercent()
       },
       _triggerPercent () {
+        // 告诉父组件更改歌曲进度
         const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
         const percent = this.$refs.progress.clientWidth / barWidth
         this.$emit('percentChange', percent)
       },
       _offset (offsetWidth) {
+        // 更改小球和进度条位置
         this.$refs.progress.style.width = `${offsetWidth}px`
         this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      },
+      progressClick (e) {
+        this._offset(e.offsetX)
+        this._triggerPercent()
       }
     },
     watch: {
@@ -66,6 +76,11 @@
           const offsetWidth = newPercent * barWidth
           this._offset(offsetWidth)
         }
+      },
+      clickmini () {
+        // 解决  当歌曲在小视口暂停时，打开大视口后小球在初始位置的bug
+        const offsetWidth = this.$refs.progress.style.width
+        this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth},0,0)`
       }
     }
   }
