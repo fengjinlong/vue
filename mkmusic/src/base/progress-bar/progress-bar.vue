@@ -65,6 +65,7 @@
         this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
       },
       progressClick (e) {
+        // 点击小球时候出现bug
         this._offset(e.offsetX)
         this._triggerPercent()
       }

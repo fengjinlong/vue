@@ -312,7 +312,11 @@
       }
     },
     watch: {
+      setPlayList () {
+        console.log(6666)
+      },
       currentSong (newSong, oldSong) {
+        console.log(5555)
         if (newSong.id === oldSong.id) {
           return
         }

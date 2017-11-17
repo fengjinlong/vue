@@ -24,6 +24,7 @@
     },
     methods: {
       selectItem (item, index) {
+        // console.log(item.name + '+' + index)
         this.$emit('select', item, index)
       },
       getDesc (song) {

@@ -81,6 +81,7 @@ export default {
       this.$router.back()
     },
     selectItem (item, index) {
+      console.log(this.songs)
       this.selectPlay({
         list: this.songs,
         index
