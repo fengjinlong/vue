@@ -323,6 +323,7 @@
         // 延迟，因为dom没有加载上调用不了this.$refs.audio.play()
         this.$nextTick(() => {
           this.$refs.audio.play()
+          this.currentSong.getLyric()
         })
       },
       playing (newPlaying) {
