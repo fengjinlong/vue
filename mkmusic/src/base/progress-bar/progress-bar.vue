@@ -65,8 +65,11 @@
         this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
       },
       progressClick (e) {
-        // 点击小球时候出现bug
-        this._offset(e.offsetX)
+        // 点击小球时候出现bug  e.offsetX获取不对
+        // this._offset(e.offsetX)
+        const rect = this.$refs.progressBar.getBoundingClientRect()
+        const offsetWidth = e.pageX - rect.left
+        this._offset(offsetWidth)
         this._triggerPercent()
       }
     },
