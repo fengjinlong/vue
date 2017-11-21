@@ -19,6 +19,7 @@
         type: Boolean,
         default: false
       },
+      // 传入data是为了监听，当data变化时，自动调刷新方法
       data: {
         type: Array,
         default: null

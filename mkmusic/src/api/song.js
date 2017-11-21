@@ -1,11 +1,11 @@
 import {commonParams} from './config'
 import axios from 'axios'
 
-const debug = process.env.NODE_ENV !== 'production'
+// const debug = process.env.NODE_ENV !== 'production'
 
 export function getLyric (mid) {
-  const url = debug ? '/api/lyric' : 'http://ustbhuangyi.com/music/api/lyric'
-
+  // const url = debug ? '/api/lyric' : 'http://ustbhuangyi.com/music/api/lyric'
+  const url = '/api/lyric'
   const data = Object.assign({}, commonParams, {
     songmid: mid,
     platform: 'yqq',
@@ -13,6 +13,7 @@ export function getLyric (mid) {
     needNewCode: 0,
     categoryId: 10000000,
     pcachetime: +new Date(),
+    g_tk: 1928093487,
     format: 'json'
   })
 
