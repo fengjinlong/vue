@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="playing-lyric-wrapper">
-              <div class="playing-lyric"></div>
+              <div class="playing-lyric">{{playinglyric}}</div>
             </div>
           </div>
           <!-- 当currentLyric不为null时传入组件 -->
@@ -129,7 +129,8 @@
         radius: 32,
         currentLyric: null,
         currentLineNum: 0,
-        currentShow: 'cd'
+        currentShow: 'cd',
+        playinglyric: ''
       }
     },
     computed: {
@@ -257,10 +258,15 @@
         }
       },
       togglePlaying () {
+        if (!this.songReady) {
+          return
+        }
         this.setPlayState(!this.playing)
+        if (this.currentLyric) {
+          this.currentLyric.togglePlay()
+        }
       },
       end () {
-        console.log('完毕')
         if (this.mode === playMode.loop) {
           this.loop()
         } else {
@@ -270,19 +276,27 @@
       loop () {
         this.$refs.audio.currentTime = 0
         this.$refs.audio.play()
+        if (this.currentLyric) {
+          this.currentLyric.seek(0)
+        }
       },
       next () {
         // 防止快速的点击
         if (!this.songReady) {
           return
         }
-        let index = this.currentIndex + 1
-        if (index === this.playlist.length) {
-          index = 0
-        }
-        this.setCurrentIndex(index)
-        if (!this.playing) {
-          this.togglePlaying()
+        // 当列表只有一首歌曲时候出bug
+        if (this.playlist === 1) {
+          this.loop()
+        } else {
+          let index = this.currentIndex + 1
+          if (index === this.playlist.length) {
+            index = 0
+          }
+          this.setCurrentIndex(index)
+          if (!this.playing) {
+            this.togglePlaying()
+          }
         }
         this.songReady = false
       },
@@ -291,14 +305,17 @@
         if (!this.songReady) {
           return
         }
-        let index = this.currentIndex - 1
-        if (index === -1) {
-          console.log(99)
-          index = this.playlist.length - 1
-        }
-        this.setCurrentIndex(index)
-        if (!this.playing) {
-          this.togglePlaying()
+        if (this.playlist === 1) {
+          this.loop()
+        } else {
+          let index = this.currentIndex - 1
+          if (index === -1) {
+            index = this.playlist.length - 1
+          }
+          this.setCurrentIndex(index)
+          if (!this.playing) {
+            this.togglePlaying()
+          }
         }
         this.songReady = false
       },
@@ -329,9 +346,13 @@
       },
       // 更改播放进度
       onProgressBarChange (percent) {
-        this.$refs.audio.currentTime = this.currentSong.duration * percent
+        const currentTime = this.currentSong.duration * percent
+        this.$refs.audio.currentTime = currentTime
         if (!this.playing) {
           this.togglePlaying()
+        }
+        if (this.currentLyric) {
+          this.currentLyric.seek(currentTime * 1000)
         }
       },
       getLyric1 () {
@@ -340,7 +361,10 @@
           if (this.playing) {
             this.currentLyric.play()
           }
-          console.log(this.currentLyric)
+        }).catch(() => {
+          this.currentLyric = null
+          this.playingLyric = ''
+          this.currentLineNum = 0
         })
       },
       handleLyric ({lineNum, txt}) {
@@ -351,6 +375,7 @@
         } else {
           this.$refs.lyricList.scrollTo(0, 0, 1000)
         }
+        this.playinglyric = txt
       },
       middleTouchStart (e) {
         this.touch.initiated = true
@@ -412,9 +437,11 @@
         console.log(6666)
       },
       currentSong (newSong, oldSong) {
-        console.log(5555)
         if (newSong.id === oldSong.id) {
           return
+        }
+        if (this.currentLyric) {
+          this.currentLyric.stop()
         }
         // 延迟，因为dom没有加载上调用不了this.$refs.audio.play()
         this.$nextTick(() => {
