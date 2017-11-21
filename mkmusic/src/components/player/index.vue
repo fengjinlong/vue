@@ -444,10 +444,10 @@
           this.currentLyric.stop()
         }
         // 延迟，因为dom没有加载上调用不了this.$refs.audio.play()
-        this.$nextTick(() => {
+        setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric1()
-        })
+        }, 1000)
       },
       playing (newPlaying) {
         const audio = this.$refs.audio
