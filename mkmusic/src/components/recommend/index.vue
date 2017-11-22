@@ -41,7 +41,9 @@
   import Slider from 'base/slider'
   import {ERR_OK} from 'api/config'
   import Scroll from '@/base/scroll'
+  import {playlistMixin} from 'common/js/mixin'
   export default {
+    mixins: [playlistMixin],
     data () {
       return {
         recommends: [],
