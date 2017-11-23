@@ -5,6 +5,7 @@ const Singer = r => require.ensure([], () => r(require('components/Singer')))
 const Rank = r => require.ensure([], () => r(require('components/Rank')))
 const Search = r => require.ensure([], () => r(require('components/Search')))
 const SingerDetail = r => require.ensure([], () => r(require('components/singer-detail')))
+const Disc = r => require.ensure([], () => r(require('components/disc/disc')))
 
 Vue.use(Router)
 
@@ -16,7 +17,13 @@ export default new Router({
     },
     {
       path: '/recommend',
-      component: Recommend
+      component: Recommend,
+      children: [
+        {
+          path: ':id',
+          component: Disc
+        }
+      ]
     },
     {
       path: '/singer',
