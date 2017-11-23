@@ -33,9 +33,7 @@
     },
     methods: {
       _getSongList () {
-        console.log(this.disc.id)
-        getSongList(this.disc.id).then((res) => {
-          console.log(res)
+        getSongList(this.disc.dissid).then((res) => {
           if (res.code === ERR_OK) {
             this.songs = this._normalizeSongs(res.cdlist[0].songlist)
           }
