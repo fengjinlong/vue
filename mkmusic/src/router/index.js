@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 const Recommend = r => require.ensure([], () => r(require('components/Recommend')))
 const Singer = r => require.ensure([], () => r(require('components/Singer')))
-const Rank = r => require.ensure([], () => r(require('components/Rank')))
+const Rank = r => require.ensure([], () => r(require('components/rank/rank.vue')))
 const Search = r => require.ensure([], () => r(require('components/Search')))
 const SingerDetail = r => require.ensure([], () => r(require('components/singer-detail')))
 const Disc = r => require.ensure([], () => r(require('components/disc/disc')))
