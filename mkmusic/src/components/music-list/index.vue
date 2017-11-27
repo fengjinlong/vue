@@ -70,6 +70,7 @@ export default {
     this.listenScroll = true
   },
   mounted () {
+    console.log(this.songs)
     this.imageHeight = this.$refs.bgImage.clientHeight
     this.mintranslateY = -this.imageHeight + RESERVED_HEIGHT
     // this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
