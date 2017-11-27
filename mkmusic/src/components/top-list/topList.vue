@@ -1,10 +1,10 @@
 <template>
   <transition name="slide">
-    <MusicList :bgImage="bgImage" :title="title" :songs="songs"></MusicList>
+    <MusicList :rank="rank" :bgImage="bgImage" :title="title" :songs="songs"></MusicList>
   </transition>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   import MusicList from 'components/music-list'
   import {mapGetters} from 'vuex'
   import {getMusicList} from 'api/rank'
@@ -30,7 +30,8 @@
     },
     data () {
       return {
-        songs: []
+        songs: [],
+        rank: true
       }
     },
     methods: {
@@ -41,8 +42,6 @@
         }
         getMusicList(this.topList.id).then((res) => {
           if (res.code === ERR_OK) {
-            // console.log(res.songlist)
-            // console.log(this._normalizeSongs(res.songlist))
             this.songs = this._normalizeSongs(res.songlist)
           }
         })
