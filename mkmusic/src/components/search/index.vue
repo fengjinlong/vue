@@ -1,14 +1,50 @@
 <template>
   <div class="search">
     <div class="search-box-wrapper">
-      <SearchBox></SearchBox>
+      <SearchBox ref="searchBox"></SearchBox>
+    </div>
+    <div class="shortcut-wrapper">
+      <div class="shortcut">
+        <div class="hot-key">
+          <h1 class="title"></h1>
+          <ul>
+            <li @click="addquery(item.k)" class="item" v-for="item in hotKey">
+              <span>{{item.k}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import SearchBox from 'base/search-box/searchBox'
+import {getHotKey} from 'api/search'
+import {ERR_OK} from 'api/config'
+
 export default {
+  created () {
+    this._getHotKey()
+  },
+  data () {
+    return {
+      hotKey: []
+    }
+  },
+  methods: {
+    _getHotKey () {
+      getHotKey().then((res) => {
+        if (res.code === ERR_OK) {
+          this.hotKey = res.data.hotkey.slice(0, 10)
+        }
+        console.log(res)
+      })
+    },
+    addquery (k) {
+      this.$refs.searchBox.setQuery(k)
+    }
+  },
   components: {
     SearchBox
   }
