@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import {mapMutations} from 'vuex'
+  import {mapMutations, mapActions} from 'vuex'
   import {search} from 'api/search'
   import {ERR_OK} from 'api/config'
   import {createSong} from 'common/js/song'
@@ -124,11 +124,16 @@
             path: `/search/${singer.id}`
           })
           this.setSinger(singer)
+        } else {
+          this.insertSong(item)
         }
       },
       ...mapMutations({
         setSinger: 'SET_SINGER'
-      })
+      }),
+      ...mapActions([
+        'insertSong'
+      ])
     },
     watch: {
       query () {
