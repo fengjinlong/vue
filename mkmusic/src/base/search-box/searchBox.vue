@@ -21,6 +21,10 @@
       }
     },
     methods: {
+      // 暴露给父组件使用的方法
+      blur () {
+        this.$refs.query.blur()
+      },
       setQuery (query) {
         this.query = query
       },

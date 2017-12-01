@@ -2,8 +2,11 @@
   <Scroll class="suggest"
           ref="suggestScroll"
           @scrollToEnd="searchMore"
+          @beforeScroll="listScroll"
           :data="result"
-          :pullup="pullup">
+          :beforeScroll="beforeScroll"
+          :pullup="pullup"
+  >
     <ul class="suggest-list">
       <li @click="selectItem(item)" class="suggest-item" v-for="item in result">
         <div class="icon">
@@ -50,10 +53,15 @@
         page: 1,
         result: [],
         pullup: true,
-        hasMore: true
+        hasMore: true,
+        beforeScroll: true
       }
     },
     methods: {
+      // 滚动之前收起键盘
+      listScroll () {
+        this.$emit('listScroll')
+      },
       getDisplayName (item) {
         if (item.type === TYPE_SINGER) {
           return item.singername
