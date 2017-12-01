@@ -15,6 +15,9 @@
       </li>
       <Loading v-show="hasMore" title=""></Loading>
     </ul>
+    <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+      <NoResult title="抱歉，暂无搜索结果"></NoResult>
+    </div>
   </Scroll>
 </template>
 
@@ -26,6 +29,7 @@
   import Scroll from 'base/scroll'
   import Loading from 'base/loading'
   import Singer from 'common/js/singer'
+  import NoResult from 'base/no-result/noresult'
 
   const TYPE_SINGER = 'singer'
   const perpage = 20
@@ -142,7 +146,8 @@
     },
     components: {
       Scroll,
-      Loading
+      Loading,
+      NoResult
     }
   }
 </script>
