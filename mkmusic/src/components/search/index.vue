@@ -39,9 +39,7 @@ export default {
     }
   },
   methods: {
-    saveSearch () {
-      
-    },
+    saveSearch () {},
     blurInput () {
       this.$refs.searchBox.blur()
     },

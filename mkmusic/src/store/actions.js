@@ -70,6 +70,4 @@ export const insertSong = function ({commit, state}, song) {
   commit(types.SET_PLAYING_STATE, true)
 }
 
-export const saveSearchHistory = function ({commit}, query) {
-  
-}
+export const saveSearchHistory = function ({commit}, query) {}
