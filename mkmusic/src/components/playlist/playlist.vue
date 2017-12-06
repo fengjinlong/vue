@@ -17,7 +17,7 @@
               <span class="like">
                 <i></i>
               </span>
-              <span class="delete" @click="deleteOne(item)">
+              <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
               </span>
             </li>
@@ -47,7 +47,7 @@
   // // import AddSong from 'components/add-song/add-song'
   // import {playerMixin} from 'common/js/mixin'
 
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
 
   export default {
     data () {
@@ -96,12 +96,15 @@
         this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
       },
       deleteOne (item) {
-        
+        this.deleteSong(item)
       },
       ...mapMutations({
         setCurrentIndex: 'SET_CURRENT_INDEX',
         setPlayingState: 'SET_PLAYING_STATE'
-      })
+      }),
+      ...mapActions([
+        'deleteSong'
+      ])
     },
     watch: {
       currentSong (newSong, oldSong) {
