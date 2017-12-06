@@ -16,10 +16,12 @@
         <div class="search-history" v-show="searchHistory.length">
           <h1 class="title">
             <span class="text">搜索历史</span>
-            <span class="clear">
+            <span class="clear" @click="clearSearchHistory">
               <i class="icon-clear"></i>
             </span>
           </h1>
+          <!-- 参数一样才能这么写，否则需要代理，就像  代理方法saveSearch() -->
+          <searchList @delete="deleteSearchHistory" @select="addquery" :searches="searchHistory"></searchList>
         </div>
       </div>
     </div>
@@ -35,6 +37,7 @@ import SearchBox from 'base/search-box/searchBox'
 import {getHotKey} from 'api/search'
 import {ERR_OK} from 'api/config'
 import Suggest from 'components/suggest/suggest'
+import searchList from 'base/search-list/search-list'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
@@ -67,19 +70,21 @@ export default {
         if (res.code === ERR_OK) {
           this.hotKey = res.data.hotkey.slice(0, 10)
         }
-        console.log(res)
       })
     },
     addquery (k) {
       this.$refs.searchBox.setQuery(k)
     },
     ...mapActions([
-      'saveSearchHistory'
+      'saveSearchHistory',
+      'deleteSearchHistory',
+      'clearSearchHistory'
     ])
   },
   components: {
     SearchBox,
-    Suggest
+    Suggest,
+    searchList
   }
 }
 
