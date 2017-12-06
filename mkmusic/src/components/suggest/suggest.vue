@@ -141,6 +141,9 @@
         }
         this.$emit('select')
       },
+      refresh () {
+        this.$refs.suggestScroll.refresh()
+      },
       ...mapMutations({
         setSinger: 'SET_SINGER'
       }),
