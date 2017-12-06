@@ -9,11 +9,11 @@
             <span class="clear"><i class="icon-clear"></i></span>
           </h1>
         </div>
-<!--         <Scroll ref="listContent" class="list-content">
+        <Scroll :data="sequenceList" ref="listContent" class="list-content">
           <div ref="list" name="list" tag="ul">
-            <li class="item">
-              <i class="current"></i>
-              <span class="text"></span>
+            <li class="item" v-for="(item,index) in sequenceList" @click="selectItem(item, index)">
+              <i class="current" :class="getCurrentIcon(item)"></i>
+              <span class="text">{{item.name}}</span>
               <span class="like">
                 <i></i>
               </span>
@@ -22,7 +22,7 @@
               </span>
             </li>
           </div>
-        </Scroll> -->
+        </Scroll>
         <div class="list-operate">
           <div class="add">
             <i class="icon-add"></i>
@@ -41,11 +41,13 @@
 
 <script>
   // import {mapActions} from 'vuex'
-  // import {playMode} from 'common/js/config'
-  // import Scroll from 'base/scroll/scroll'
+  import {playMode} from 'common/js/config'
+  import Scroll from 'base/scroll'
   // import Confirm from 'base/confirm/confirm'
   // // import AddSong from 'components/add-song/add-song'
   // import {playerMixin} from 'common/js/mixin'
+
+  import {mapGetters, mapMutations} from 'vuex'
 
   export default {
     data () {
@@ -53,13 +55,44 @@
         showFlag: false
       }
     },
+    computed: {
+      ...mapGetters([
+        'sequenceList',
+        'currentSong'
+      ])
+    },
     methods: {
       show () {
         this.showFlag = true
+        setTimeout(() => {
+          this.$refs.listContent.refresh()
+        }, 20)
       },
       hide () {
         this.showFlag = false
-      }
+      },
+      getCurrentIcon (item) {
+        if (this.currentSong.id === item.id) {
+          return 'icon-play'
+        }
+        return ''
+      },
+      selectItem (item, index) {
+        if (this.mode === playMode.random) {
+          index = this.playlist.findIndex((song) => {
+            return song.id === item.id
+          })
+        }
+        this.setCurrentIndex(index)
+        this.setPlayingState(true)
+      },
+      ...mapMutations({
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setPlayingState: 'SET_PLAYING_STATE'
+      })
+    },
+    components: {
+      Scroll
     }
   }
 </script>
