@@ -96,11 +96,12 @@
             <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
           </progressCircle>
         </div>
-        <div class="control">
+        <div class="control" @click="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <!-- @canplay="ready"只有当歌曲ready时候，才能点下一首歌 -->
     <!-- audio 自己派发ended（播放完）等事件   -->
     <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @canplay="ready" @error="error" @ended="end">
@@ -118,6 +119,7 @@
   import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll'
+  import playlist from 'components/playlist/playlist'
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
@@ -430,6 +432,9 @@
         this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
         this.$refs.middleL.style.opacity = opacity
         this.$refs.middleL.style[transitionDuration] = `${time}ms`
+      },
+      showPlaylist () {
+        this.$refs.playlist.show()
       }
     },
     watch: {
@@ -459,7 +464,8 @@
     components: {
       ProgressBar,
       progressCircle,
-      Scroll
+      Scroll,
+      playlist
     }
   }
 </script>
