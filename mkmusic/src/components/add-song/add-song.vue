@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="search-box-wrapper">
-        <searchBox @query="search" placeholder="搜索歌曲"></searchBox>
+        <SearchBox @query="search" placeholder="搜索歌曲"></SearchBox>
       </div>
       <div class="shortcut" v-show="!query">
         <div class="list-wrapper">
@@ -23,6 +23,7 @@
         </div>
       </div>
       <div class="search-result" v-show="query">
+        <Suggest :query="query" :showSinger="showSinger"></Suggest>
       </div>
       <div ref="topTip">
         <div class="tip-title">
@@ -35,13 +36,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import searchBox from 'base/search-box/searchBox'
+  import SearchBox from 'base/search-box/searchBox'
   // import SongList from 'base/song-list/song-list'
   // import SearchList from 'base/search-list/search-list'
   import Scroll from 'base/scroll/'
   // import Switches from 'base/switches/switches'
   // import TopTip from 'base/top-tip/top-tip'
-  // import Suggest from 'components/suggest/suggest'
+  import Suggest from 'components/suggest/suggest'
   // import {searchMixin} from 'common/js/mixin'
   // import {mapGetters, mapActions} from 'vuex'
   // import Song from 'common/js/song'
@@ -50,7 +51,8 @@
     data () {
       return {
         showFlag: false,
-        query: ''
+        query: '',
+        showSinger: false
       }
     },
     methods: {
@@ -66,7 +68,8 @@
     },
     components: {
       Scroll,
-      searchBox
+      SearchBox,
+      Suggest
     }
   }
 </script>
