@@ -1,13 +1,14 @@
 <template>
-  <transition name="slide">
-    <div class="add-song">
+  <transition name="slide" >
+    <div class="add-song" v-show="showFlag" @click.stop>
       <div class="header">
         <h1 class="title">添加歌曲到列表</h1>
-        <div class="close" >
+        <div class="close" @click="hide">
           <i class="icon-close"></i>
         </div>
       </div>
       <div class="search-box-wrapper">
+        <searchBox @query="search" placeholder="搜索歌曲"></searchBox>
       </div>
       <div class="shortcut" v-show="!query">
         <div class="list-wrapper">
@@ -23,18 +24,18 @@
       </div>
       <div class="search-result" v-show="query">
       </div>
-      <top-tip ref="topTip">
+      <div ref="topTip">
         <div class="tip-title">
           <i class="icon-ok"></i>
           <span class="text">1首歌曲已经添加到播放列表</span>
         </div>
-      </top-tip>
+      </div>
     </div>
   </transition>
 </template>
 
 <script type="text/ecmascript-6">
-  // import SearchBox from 'base/search-box/search-box'
+  import searchBox from 'base/search-box/searchBox'
   // import SongList from 'base/song-list/song-list'
   // import SearchList from 'base/search-list/search-list'
   import Scroll from 'base/scroll/'
@@ -45,7 +46,29 @@
   // import {mapGetters, mapActions} from 'vuex'
   // import Song from 'common/js/song'
 
-  export default {}
+  export default {
+    data () {
+      return {
+        showFlag: false,
+        query: ''
+      }
+    },
+    methods: {
+      show () {
+        this.showFlag = true
+      },
+      hide () {
+        this.showFlag = false
+      },
+      search (query) {
+        this.query = query
+      }
+    },
+    components: {
+      Scroll,
+      searchBox
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
