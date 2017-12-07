@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="search-box-wrapper">
-        <SearchBox @query="search" placeholder="搜索歌曲"></SearchBox>
+        <SearchBox @query="onQueryChange" placeholder="搜索歌曲"></SearchBox>
       </div>
       <div class="shortcut" v-show="!query">
         <div class="list-wrapper">
@@ -23,7 +23,11 @@
         </div>
       </div>
       <div class="search-result" v-show="query">
-        <Suggest :query="query" :showSinger="showSinger"></Suggest>
+        <Suggest :query="query"
+                 :showSinger="showSinger"
+                 @select="selectSuggest"
+                 @listScroll="blurInput"
+                 ></Suggest>
       </div>
       <div ref="topTip">
         <div class="tip-title">
@@ -43,15 +47,15 @@
   // import Switches from 'base/switches/switches'
   // import TopTip from 'base/top-tip/top-tip'
   import Suggest from 'components/suggest/suggest'
-  // import {searchMixin} from 'common/js/mixin'
+  import {searchMixin} from 'common/js/mixin'
   // import {mapGetters, mapActions} from 'vuex'
   // import Song from 'common/js/song'
 
   export default {
+    mixins: [searchMixin],
     data () {
       return {
         showFlag: false,
-        query: '',
         showSinger: false
       }
     },
@@ -62,8 +66,11 @@
       hide () {
         this.showFlag = false
       },
-      search (query) {
+      onQueryChange (query) {
         this.query = query
+      },
+      selectSuggest () {
+        this.saveSearch()
       }
     },
     components: {
@@ -106,7 +113,6 @@
           padding: 12px
           font-size: 20px
           color: $color-theme
-
     .search-box-wrapper
       margin: 20px
     .shortcut

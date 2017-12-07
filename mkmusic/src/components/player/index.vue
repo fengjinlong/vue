@@ -109,7 +109,7 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import {mapGetters, mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
   import progressCircle from 'base/progress-circle/progress-circle'
