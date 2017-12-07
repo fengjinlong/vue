@@ -115,15 +115,16 @@
   import progressCircle from 'base/progress-circle/progress-circle'
   import {prefixStyle} from 'common/js/dom'
   import ProgressBar from 'base/progress-bar/progress-bar'
-  import {playMode} from 'common/js/config'
-  import {shuffle} from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll'
   import playlist from 'components/playlist/playlist'
+  import {playMode} from 'common/js/config'
+  import {playerMixin} from 'common/js/mixin'
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
   export default {
+    mixins: [playerMixin],
     data () {
       return {
         songReady: false,
@@ -136,9 +137,6 @@
       }
     },
     computed: {
-      iconMode () {
-        return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-      },
       clickfullScreen () {
         // 解决暂停切换出现小球位置不对的bug
         return this.fullScreen
@@ -159,38 +157,15 @@
         return this.currentTime / this.currentSong.duration
       },
       ...mapGetters([
-        'playlist',
         'fullScreen',
-        'currentSong',
         'playing',
-        'currentIndex',
-        'mode',
-        // 原始列表
-        'sequenceList'
+        'currentIndex'
       ])
     },
     created () {
       this.touch = {}
     },
     methods: {
-      changeMode () {
-        const mode = (this.mode + 1) % 3
-        this.setPlayMode(mode)
-        let list = null
-        if (mode === playMode.random) {
-          list = shuffle(this.sequenceList)
-        } else {
-          list = this.sequenceList
-        }
-        this.resetCurrentIndex(list)
-        this.setPlayList(list)
-      },
-      resetCurrentIndex (list) {
-        let index = list.findIndex((item) => {
-          return item.id === this.currentSong.id
-        })
-        this.setCurrentIndex(index)
-      },
       back () {
         this.setFullScreen(false)
       },
@@ -198,11 +173,7 @@
         this.setFullScreen(true)
       },
       ...mapMutations({
-        setFullScreen: 'SET_FULL_SCREEN',
-        setPlayState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayMode: 'SET_PLAY_MODE',
-        setPlayList: 'SET_PLAYLIST'
+        setFullScreen: 'SET_FULL_SCREEN'
       }),
       enter (el, done) {
         const {x, y, scale} = this._getPosAndScale()
@@ -442,6 +413,9 @@
         console.log(6666)
       },
       currentSong (newSong, oldSong) {
+        if (!newSong.id) {
+          return
+        }
         if (newSong.id === oldSong.id) {
           return
         }
