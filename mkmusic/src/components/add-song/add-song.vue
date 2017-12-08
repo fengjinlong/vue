@@ -11,16 +11,7 @@
         <SearchBox @query="onQueryChange" placeholder="搜索歌曲"></SearchBox>
       </div>
       <div class="shortcut" v-show="!query">
-        <div class="list-wrapper">
-          <Scroll ref="songList" class="list-scroll">
-            <div class="list-inner">
-            </div>
-          </Scroll>
-          <Scroll ref="searchList" class="list-scroll">
-            <div class="list-inner">
-            </div>
-          </Scroll>
-        </div>
+        <Switches @switch="switchItem" :currentIndex="currentIndex" :switches="switches"></Switches>
       </div>
       <div class="search-result" v-show="query">
         <Suggest :query="query"
@@ -43,8 +34,8 @@
   import SearchBox from 'base/search-box/searchBox'
   // import SongList from 'base/song-list/song-list'
   // import SearchList from 'base/search-list/search-list'
-  import Scroll from 'base/scroll/'
-  // import Switches from 'base/switches/switches'
+  // import Scroll from 'base/scroll/'
+  import Switches from 'base/switches/switches'
   // import TopTip from 'base/top-tip/top-tip'
   import Suggest from 'components/suggest/suggest'
   import {searchMixin} from 'common/js/mixin'
@@ -56,7 +47,12 @@
     data () {
       return {
         showFlag: false,
-        showSinger: false
+        showSinger: false,
+        currentIndex: 0,
+        switches: [
+          {name: '最近播放'},
+          {name: '搜索历史'}
+        ]
       }
     },
     methods: {
@@ -71,12 +67,15 @@
       },
       selectSuggest () {
         this.saveSearch()
+      },
+      switchItem (index) {
+        this.currentIndex = index
       }
     },
     components: {
-      Scroll,
       SearchBox,
-      Suggest
+      Suggest,
+      Switches
     }
   }
 </script>
