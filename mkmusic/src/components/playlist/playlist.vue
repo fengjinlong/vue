@@ -49,7 +49,7 @@
   import Confirm from 'base/confirm/confirm'
   import addSong from 'components/add-song/add-song'
   import {playerMixin} from 'common/js/mixin'
-  import {mapActions} from 'vuex'
+  import {mapActions, mapMutations} from 'vuex'
 
   export default {
     mixins: [playerMixin],
@@ -89,6 +89,9 @@
         this.setCurrentIndex(index)
         this.setPlayingState(true)
       },
+      ...mapMutations({
+        setPlayingState: 'SET_PLAYING_STATE'
+      }),
       scrollToCurrent (current) {
         const index = this.sequenceList.findIndex((song) => {
           return current.id === song.id
@@ -116,6 +119,7 @@
         'deleteSongList'
       ])
     },
+
     watch: {
       currentSong (newSong, oldSong) {
         if (!this.showFlag || newSong.id === oldSong.id) {
