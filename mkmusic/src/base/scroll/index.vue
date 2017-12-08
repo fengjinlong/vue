@@ -24,10 +24,6 @@
         type: Array,
         default: null
       },
-      refreshDelay: {
-        type: Number,
-        default: 20
-      },
       direction: {
         type: String,
         default: DIRECTION_V
@@ -44,6 +40,10 @@
       beforeScroll: {
         type: Boolean,
         default: false
+      },
+      refreshDelay: {
+        type: Number,
+        default: 20
       }
     },
     mounted () {

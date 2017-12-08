@@ -9,7 +9,10 @@
             <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
-        <Scroll :data="sequenceList" ref="listContent" class="list-content">
+        <Scroll :data="sequenceList" 
+                ref="listContent" 
+                class="list-content"
+                :refreshDelay="refreshDelay">
           <transition-group ref="list" name="list" tag="ul">
             <li ref="listItem" 
                 class="item" 
@@ -55,7 +58,8 @@
     mixins: [playerMixin],
     data () {
       return {
-        showFlag: false
+        showFlag: false,
+        refreshDelay: 100
       }
     },
     computed: {
