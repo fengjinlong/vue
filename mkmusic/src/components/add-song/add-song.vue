@@ -13,6 +13,16 @@
       <div class="shortcut" v-show="!query">
         <Switches @switch="switchItem" :currentIndex="currentIndex" :switches="switches"></Switches>
       </div>
+      <div class="list-wrapper">
+        <Scroll v-if="currentIndex===0" 
+                :data="playHistory"
+                class="list-scroll">
+          <div class="list-inner">
+            <SongList :songs="playHistory"
+                      @select="selectSong"></SongList>
+          </div>
+        </Scroll>
+      </div>
       <div class="search-result" v-show="query">
         <Suggest :query="query"
                  :showSinger="showSinger"
@@ -32,14 +42,14 @@
 
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/searchBox'
-  // import SongList from 'base/song-list/song-list'
+  import SongList from 'base/song-list'
   // import SearchList from 'base/search-list/search-list'
-  // import Scroll from 'base/scroll/'
+  import Scroll from 'base/scroll/'
   import Switches from 'base/switches/switches'
   // import TopTip from 'base/top-tip/top-tip'
   import Suggest from 'components/suggest/suggest'
   import {searchMixin} from 'common/js/mixin'
-  // import {mapGetters, mapActions} from 'vuex'
+  import {mapGetters} from 'vuex'
   // import Song from 'common/js/song'
 
   export default {
@@ -54,6 +64,11 @@
           {name: '搜索历史'}
         ]
       }
+    },
+    computed: {
+      ...mapGetters([
+        'playHistory'
+      ])
     },
     methods: {
       show () {
@@ -70,12 +85,19 @@
       },
       switchItem (index) {
         this.currentIndex = index
+      },
+      selectSong (song, index) {
+        if (index !== 0) {
+          
+        }
       }
     },
     components: {
       SearchBox,
       Suggest,
-      Switches
+      Switches,
+      Scroll,
+      SongList
     }
   }
 </script>
