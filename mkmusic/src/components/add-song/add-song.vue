@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <transition name="slide" >
     <div class="add-song" v-show="showFlag" @click.stop>
       <div class="header">
@@ -42,7 +42,49 @@
       </TopTip>
     </div>
   </transition>
-</template>
+</template> -->
+ <template> 
+   <transition name="slide"> 
+    <div class="add-song" v-show="showFlag" @click.stop> 
+       <div class="header"> 
+         <h1 class="title">添加歌曲到列表</h1> 
+         <div class="close" @click="hide"> 
+          <i class="icon-close"></i> 
+         </div> 
+       </div> 
+       <div class="search-box-wrapper"> 
+         <search-box ref="searchBox" @query="onQueryChange" placeholder="搜索歌曲"></search-box> 
+       </div> 
+       <div class="shortcut" v-show="!query"> 
+         <switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switches> 
+         <div class="list-wrapper"> 
+           <scroll ref="songList" v-if="currentIndex===0" class="list-scroll" :data="playHistory"> 
+             <div class="list-inner"> 
+               <song-list :songs="playHistory" @select="selectSong"> 
+               </song-list> 
+             </div> 
+           </scroll> 
+           <scroll :refreshDelay="refreshDelay" ref="searchList" v-if="currentIndex===1" class="list-scroll" 
+                   :data="searchHistory"> 
+             <div class="list-inner"> 
+               <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list> 
+             </div> 
+           </scroll> 
+         </div> 
+       </div> 
+       <div class="search-result" v-show="query"> 
+         <suggest :query="query" :showSinger="showSinger" @select="selectSuggest" @listScroll="blurInput"></suggest> 
+       </div> 
+       <top-tip ref="topTip"> 
+         <div class="tip-title"> 
+           <i class="icon-ok"></i> 
+           <span class="text">1首歌曲已经添加到播放列表</span> 
+         </div> 
+       </top-tip> 
+     </div> 
+   </transition> 
+ </template> 
+
 
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/searchBox'
