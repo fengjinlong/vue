@@ -7,6 +7,7 @@ const Search = r => require.ensure([], () => r(require('components/Search')))
 const SingerDetail = r => require.ensure([], () => r(require('components/singer-detail')))
 const Disc = r => require.ensure([], () => r(require('components/disc/disc')))
 const TopList = r => require.ensure([], () => r(require('components/top-list/topList')))
+const UserCenter = r => require.ensure([], () => r(require('components/user-center/user-center')))
 
 Vue.use(Router)
 
@@ -55,6 +56,10 @@ export default new Router({
           component: SingerDetail
         }
       ]
+    },
+    {
+      path: '/user',
+      component: UserCenter
     }
   ]
 })
