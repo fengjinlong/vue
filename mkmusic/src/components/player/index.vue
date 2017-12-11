@@ -106,7 +106,7 @@
     <playlist ref="playlist"></playlist>
     <!-- @canplay="ready"只有当歌曲ready时候，才能点下一首歌 -->
     <!-- audio 自己派发ended（播放完）等事件   -->
-    <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @canplay="ready" @error="error" @ended="end">
+    <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @play="ready" @error="error" @ended="end">
     </audio>
   </div>
 </template>
@@ -266,6 +266,7 @@
         // 当列表只有一首歌曲时候出bug
         if (this.playlist === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex + 1
           if (index === this.playlist.length) {
@@ -285,6 +286,7 @@
         }
         if (this.playlist === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex - 1
           if (index === -1) {
@@ -336,6 +338,9 @@
       },
       getLyric1 () {
         this.currentSong.getLyric2().then((lyric) => {
+          if (this.currentSong.lyric !== lyric) {
+            return
+          }
           this.currentLyric = new Lyric(lyric, this.handleLyric)
           if (this.playing) {
             this.currentLyric.play()
@@ -429,7 +434,8 @@
           this.currentLyric.stop()
         }
         // 延迟，因为dom没有加载上调用不了this.$refs.audio.play()
-        setTimeout(() => {
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric1()
         }, 1000)
