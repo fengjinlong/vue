@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    hello world
+    <Mheader></Mheader>
+    <Tab></Tab>
+    <router-view></router-view>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+import Mheader from 'components/m-header'
+import Tab from 'components/tab/tab'
 export default {
-  name: 'app'
+  components: {
+    Mheader,
+    Tab
+  }
 }
 </script>
 
