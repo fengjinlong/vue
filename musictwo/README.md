@@ -22,3 +22,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 jsonp
 动态创建script标签，script没有同源策略，src指向服务端地址，这个地址与ajax的src有什么不一样地方（这个地址有个参数，callback = a,....  前端执行这个a方法）
+
+
+
+上次看到哪里
+4-3  10
