@@ -5,7 +5,7 @@
       </slot>
     </div>
     <div class="dots">
-      <!-- <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span> -->
+      <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span>
     </div>
   </div>
 </template>
@@ -15,6 +15,12 @@
   import BScroll from 'better-scroll'
 
   export default {
+    data () {
+      return {
+        dots: [],
+        currentPageIndex: 0
+      }
+    },
     props: {
       loop: {
         type: Boolean,
@@ -33,6 +39,7 @@
       // dom挂载后初始化scroll
       setTimeout(() => {
         this._setSliderWidth()
+        this._initDots()
         this._initSlider()
       }, 20)
     },
@@ -64,6 +71,9 @@
             speed: 400
           }
         })
+      },
+      _initDots () {
+        this.dots = new Array(this.children.length)
       }
     },
     components: {
