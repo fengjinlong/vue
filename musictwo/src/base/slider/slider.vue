@@ -102,6 +102,9 @@
     },
     components: {
       BScroll
+    },
+    destroyed () {
+      clearTimeout(this.timer)
     }
   }
 </script>
