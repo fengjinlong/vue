@@ -1,10 +1,11 @@
 <template>
-  <div>
-
+  <div class="wrapper">
+    <slot></slot>  
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import BScroll from 'better-scroll'
   export default {
 
   }
