@@ -106,7 +106,7 @@
     <playlist ref="playlist"></playlist>
     <!-- @canplay="ready"只有当歌曲ready时候，才能点下一首歌 -->
     <!-- audio 自己派发ended（播放完）等事件   -->
-    <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @play="ready" @error="error" @ended="end">
+    <audio ref="audio" :src='currentSong.url' @timeupdate="updateTime" @playing="ready" @error="error" @ended="end">
     </audio>
   </div>
 </template>
@@ -161,7 +161,8 @@
       ...mapGetters([
         'fullScreen',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'playing'
       ])
     },
     created () {
@@ -300,10 +301,18 @@
         this.songReady = false
       },
       ready () {
+        clearTimeout(this.timer)
+        // 监听 playing 这个事件可以确保慢网速或者快速切换歌曲导致的 DOM Exception
         this.songReady = true
+        this.canLyricPlay = true
         this.savePlayHistory(this.currentSong)
+      // 如果歌曲的播放晚于歌词的出现，播放的时候需要同步歌词
+        if (this.currentLyric && !this.isPureMusic) {
+          this.currentLyric.seek(this.currentTime * 1000)
+        }
       },
       error () {
+        clearTimeout(this.timer)
         this.songReady = true
       },
       updateTime (e) {
@@ -437,6 +446,11 @@
         clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           this.$refs.audio.play()
+          // 若歌曲 5s 未播放，则认为超时，修改状态确保可以切换歌曲。
+          clearTimeout(this.timer)
+          this.timer = setTimeout(() => {
+            this.songReady = true
+          }, 5000)
           this.getLyric1()
         }, 1000)
       },
