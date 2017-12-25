@@ -12,8 +12,8 @@
   // import Singer from 'common/js/singer'
   // import {mapMutations} from 'vuex'
   // import {playlistMixin} from 'common/js/mixin'
-  // const HOT_SINGER_LEN = 10
-  // const HOT_NAME = '热门'
+  const HOT_SINGER_LEN = 10
+  const HOT_NAME = '热门'
   export default {
     data () {
       return {
@@ -28,6 +28,23 @@
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
             this.singers = this._normalizeSinger(res.data.list)
+          }
+        })
+      },
+      _normalizeSinger (list) {
+        let map = {
+          hot: {
+            title: HOT_NAME,
+            items: []
+          }
+        }
+        list.forEach((item, index) => {
+          if (index < HOT_SINGER_LEN) {
+            map.hot.items.push({
+              name: item.Fsinger_name,
+              id: item.Fsinger_mid
+            })
+            console.log(1)
           }
         })
       }
