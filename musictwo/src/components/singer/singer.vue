@@ -9,7 +9,7 @@
   // import ListView from 'base/listview/listview'
   import {getSingerList} from 'api/singer'
   import {ERR_OK} from 'api/config'
-  // import Singer from 'common/js/singer'
+  import Singer from 'common/js/singer'
   // import {mapMutations} from 'vuex'
   // import {playlistMixin} from 'common/js/mixin'
   const HOT_SINGER_LEN = 10
@@ -40,12 +40,22 @@
         }
         list.forEach((item, index) => {
           if (index < HOT_SINGER_LEN) {
-            map.hot.items.push({
+            map.hot.items.push(new Singer({
               name: item.Fsinger_name,
               id: item.Fsinger_mid
-            })
-            console.log(1)
+            }))
           }
+          const key = item.Findex
+          if (!map[key]) {
+            map[key] = {
+              title: key,
+              items: []
+            }
+          }
+          map[key].items.push(new Singer({
+            name: item.Fsinger_name,
+            id: item.Fsinger_mid
+          }))
         })
       }
 
