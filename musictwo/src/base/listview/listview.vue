@@ -1,65 +1,35 @@
 <template>
-  <!-- <scroll class="listview"
-          :data="data"
-          ref="listview">
-    <ul>
-      <li ref="listGroup" v-for="group in data" class="list-group">
-        <h2 class="list-group-title">{{group.title}}</h2>
-        <ul>
-          <li @click="selectItem(item)" 
-          v-for="item in group.items" 
-          class="list-group-item">
-            <img v-lazy="item.avatar" class="avatar">
-            <span class="name">{{item.name}}</span>
-          </li>
-        </ul>
-      </li>
-    </ul>
-    <div @touchmove.stop.prevent="onShortcutTouchMove" 
-         class="list-shortcut">
-      <ul>
-        <li @touchstart="onShortcutTouchStart(index)"
-            :data-index="index"
-            class="item" 
-            v-for="(item, index) in shortcutList">
-          {{item}}
-        </li>
-      </ul>
-    </div>
-    <div class="list-fixed"  ref="fixed">
-      <h1 class="fixed-title">{{fixedTitle}}</h1>
-    </div>
-  </scroll> -->
-    <scroll @scroll="scroll"
+    <Scroll @scroll="scroll"
           :data="data"
           class="listview"
+          :probeType="probeType"
+          :listenScroll="listenScroll"
           ref="listview">
-    <ul>
-      <li v-for="group in data" class="list-group" ref="listGroup">
-        <h2 class="list-group-title">{{group.title}}</h2>
-        <uL>
-          <li @click="selectItem(item)"
-          ref="listGroup" 
-          v-for="item in group.items" 
-          class="list-group-item">
-            <img class="avatar" v-lazy="item.avatar">
-            <span class="name">{{item.name}}</span>
-          </li>
-        </uL>
-      </li>
-    </ul>
-    <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove"
-         @touchend.stop>
       <ul>
-        <li v-for="(item, index) in shortcutList" :data-index="index" class="item"
-            :class="{'current':currentIndex===index}">{{item}}
+        <li v-for="group in data" class="list-group" ref="listGroup">
+          <h2 class="list-group-title">{{group.title}}</h2>
+          <uL>
+            <li @click="selectItem(item)"
+            v-for="item in group.items" 
+            class="list-group-item">
+              <img class="avatar" v-lazy="item.avatar">
+              <span class="name">{{item.name}}</span>
+            </li>
+          </uL>
         </li>
       </ul>
-    </div>
+      <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove"
+          @touchend.stop>
+        <ul>
+          <li v-for="(item, index) in shortcutList" :data-index="index" class="item"
+              :class="{'current':currentIndex===index}">{{item}}
+          </li>
+        </ul>
+      </div>
     <div class="list-fixed" ref="fixed" v-show="fixedTitle">
       <div class="fixed-title">{{fixedTitle}} </div>
     </div>
-  </scroll>
+  </Scroll>
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
@@ -69,7 +39,8 @@
     props: {
       data: {
         type: Array,
-        default: []
+        default: [],
+        currentIndex: 0
       }
     },
     computed: {
@@ -108,7 +79,6 @@
         this.touch.y1 = firstTouch.pageY
         this.touch.anchorIndex = anchorIndex
         this._scrollTo(anchorIndex)
-        // console.log(anchorIndex)
       },
       onShortcutTouchMove (e) {
         let firstTouch = e.touches[0]
@@ -138,16 +108,50 @@
         if (!index && index !== 0) {
           return
         }
-        // if (index < 0) {
-        //   index = 0
-        // } else if (index > this.listHeight.length - 2) {
-        //   index = this.listHeight.length - 2
-        // }
-        console.log(index)
+        if (index < 0) {
+          index = 0
+        } else if (index > this.listHeight.length - 2) {
+          index = this.listHeight.length - 2
+        }
         let dom = '.list-group:nth-child(' + index + ')'
-        console.log(dom)
         this.$refs.listview.scrollToElement(dom, 0)
         this.scrollY = this.$refs.listview.scroll.y
+        console.log(this.$refs.listview.scroll)
+      }
+    },
+    watch: {
+      data () {
+        setTimeout(() => {
+          this._calculateHeight()
+        }, 20)
+      },
+      scrollY (newY) {
+        const listHeight = this.listHeight
+        // 当滚动到顶部，newY>0
+        if (newY > 0) {
+          this.currentIndex = 0
+          return
+        }
+        // 在中间部分滚动
+        for (let i = 0; i < listHeight.length - 1; i++) {
+          let height1 = listHeight[i]
+          let height2 = listHeight[i + 1]
+          if (-newY >= height1 && -newY < height2) {
+            this.currentIndex = i
+            this.diff = height2 + newY
+            return
+          }
+        }
+        // 当滚动到底部，且-newY大于最后一个元素的上限
+        this.currentIndex = listHeight.length - 2
+      },
+      diff(newVal) {
+        let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
+        if (this.fixedTop === fixedTop) {
+          return
+        }
+        this.fixedTop = fixedTop
+        this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
       }
     },
     components: {
