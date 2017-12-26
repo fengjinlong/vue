@@ -11,8 +11,6 @@
   import {getSingerList} from 'api/singer'
   import {ERR_OK} from 'api/config'
   import Singer from 'common/js/singer'
-  // import {mapMutations} from 'vuex'
-  // import {playlistMixin} from 'common/js/mixin'
   const HOT_SINGER_LEN = 10
   const HOT_NAME = '热门'
   export default {
@@ -29,6 +27,7 @@
       _getSingerList () {
         getSingerList().then((res) => {
           if (res.code === ERR_OK) {
+            console.log(this._normalizeSinger(res.data.list))
             this.singers = this._normalizeSinger(res.data.list)
           }
         })
