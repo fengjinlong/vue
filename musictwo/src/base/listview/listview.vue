@@ -29,12 +29,17 @@
     <div class="list-fixed" ref="fixed" v-show="fixedTitle">
       <div class="fixed-title">{{fixedTitle}} </div>
     </div>
+    <div v-show="!data.length" class="loading-container">
+      <Loading></Loading>
+    </div>
   </Scroll>
 </template>
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
+  import Loading from 'base/loading/loading'
   import {getData} from 'common/js/dom'
   const ANCHOR_HEIGHT = 18
+  const TITLE_HEIGHT = 30
   export default {
     props: {
       data: {
@@ -116,7 +121,6 @@
         let dom = '.list-group:nth-child(' + index + ')'
         this.$refs.listview.scrollToElement(dom, 0)
         this.scrollY = this.$refs.listview.scroll.y
-        console.log(this.$refs.listview.scroll)
       }
     },
     watch: {
@@ -145,7 +149,7 @@
         // 当滚动到底部，且-newY大于最后一个元素的上限
         this.currentIndex = listHeight.length - 2
       },
-      diff(newVal) {
+      diff (newVal) {
         let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
         if (this.fixedTop === fixedTop) {
           return
@@ -155,190 +159,10 @@
       }
     },
     components: {
-      Scroll
+      Scroll,
+      Loading
     }
   }
-
-// import Scroll from 'base/scroll/scroll'
-// const ANCHOR_HEIGHT = 18
-// export default {
-//   created () {
-//     this.touch = {}
-//   },
-//   props: {
-//     data () {
-//       return {
-//         type: Array,
-//         default: []
-//       }
-//     }
-//   },
-//   computed: {
-//     shortcutList () {
-//       return this.data.map((group) => {
-//         console.log(group.title.substr(0, 1))
-//         return group.title.substr(0, 1)
-//       })
-//     },
-//     fixedTitle () {
-//       if (this.scrollY > 0) {
-//         return ''
-//       }
-//       return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
-//     }
-//   },
-//   methods: {
-//     onShortcutTouchStart (e) {
-//       // let anchorIndex = getData(e.target, 'index')
-//       // this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex], 0)
-//       // let firstTouch = e.touches[0]
-//       // this.touch.y1 = firstTouch.pageY
-//       // this.touch.anchorIndex = anchorIndex
-//       // this._scrollTo(anchorIndex)
-//       this._scrollTo(e)
-//       this.touch.beginIndex = e
-//     },
-//     onShortcutTouchMove (e) {
-//       let firstTouch = e.touches[0]
-//       this.touch.y2 = firstTouch.pageY
-//       let data = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
-//       this._scrollTo(parseInt((this.touch.beginIndex) + data))
-//     },
-//     _scrollTo (index) {
-//       if (!index && index !== 0) {
-//         return
-//       }
-//       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
-//       // this.scrollY = this.$refs.listview.scroll.y
-//     }
-//   },
-//   components: {
-//     Scroll
-//   }
-// }
-// //   import Scroll from 'base/scroll'
-// //   import Loading from 'base/loading'
-
-// //   const ANCHOR_HEIGHT = 18
-// //   const TITLE_HEIGHT = 30
-
-// //   export default {
-// //     created () {
-// //       this.touch = {}
-// //       this.listenScroll = true
-// //       this.listHeight = []
-// //       this.probeType = 3
-// //     },
-// //     data () {
-// //       return {
-// //         scrollY: -1,
-// //         currentIndex: 0,
-// //         diff: -1
-// //       }
-// //     },
-// //     props: {
-// //       data: {
-// //         type: Array,
-// //         default: []
-// //       }
-// //     },
-// //     computed: {
-// //       shortcutList () {
-// //         return this.data.map((group) => {
-// //           return group.title.substr(0, 1)
-// //         })
-// //       },
-// //       fixedTitle () {
-// //         if (this.scrollY > 0) {
-// //           return ''
-// //         }
-// //         return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
-// //       }
-// //     },
-// //     methods: {
-// //       refresh () {
-// //         this.$refs.listview.refresh()
-// //       },
-// //       selectItem (item) {
-// //         this.$emit('select', item)
-// //       },
-// //       onShortcutTouchStartdiv (e) {
-// //         // 获取y
-// //         let firstTouch = e.touches[0]
-// //         this.touch.y1 = firstTouch.pageY
-// //       },
-// //       onShortcutTouchStart (index) {
-// //         this._scrollTo(index)
-// //         this.touch.beginIndex = index
-// //       },
-// //       onShortcutTouchMove (e) {
-// //         let firstTouch = e.touches[0]
-// //         this.touch.y2 = firstTouch.pageY
-// //         let data = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
-// //         this._scrollTo(this.touch.beginIndex + data)
-// //       },
-// //       scroll (pos) {
-// //         this.scrollY = pos.y
-// //       },
-// //       _scrollTo (index) {
-// //         if (!index && index !== 0) {
-// //           return
-// //         }
-// //         this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
-// //         this.scrollY = this.$refs.listview.scroll.y
-// //       },
-// //       _calculateHeight () {
-// //         this.listHeight = []
-// //         const list = this.$refs.listGroup
-// //         let height = 0
-// //         this.listHeight.push(height)
-// //         for (let i = 0; i < list.length; i++) {
-// //           let item = list[i]
-// //           height += item.clientHeight
-// //           this.listHeight.push(height)
-// //         }
-// //       }
-// //     },
-// //     watch: {
-// //       data () {
-// //         setTimeout(() => {
-// //           this._calculateHeight()
-// //         }, 20)
-// //       },
-// //       scrollY (newY) {
-// //         const listHeight = this.listHeight
-// //         // 滚动到顶部 newY>0
-// //         if (newY > 0) {
-// //           this.currentIndex = 0
-// //           return
-// //         }
-// //         // 滚动到中间部分
-// //         for (let i = 0; i < listHeight.length - 1; i++) {
-// //           let height1 = listHeight[i]
-// //           let height2 = listHeight[i + 1]
-// //           if (-newY >= height1 && -newY < height2) {
-// //             this.currentIndex = i
-// //             this.diff = height2 + newY
-// //             return
-// //           }
-// //         }
-// //       // 滚动到底部 -newY 大于最后一个元素的上限
-// //         this.currentIndex = listHeight.length - 2
-// //       },
-// //       diff (newVal) {
-// //         let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
-// //         if (this.fixedTop === fixedTop) {
-// //           return
-// //         }
-// //         this.fixedTop = fixedTop
-// //         this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
-// //       }
-// //     },
-// //     components: {
-// //       Scroll,
-// //       Loading
-// //     }
-// //   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">

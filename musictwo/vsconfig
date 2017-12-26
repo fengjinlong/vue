@@ -1,0 +1,14 @@
+{
+    "workbench.colorTheme": "Atom One Dark",
+    "window.zoomLevel": 1,
+    "vetur.validation.template": false,
+    "editor.tabSize": 2,
+    "workbench.activityBar.visible": true,
+    "workbench.iconTheme": "vscode-icons",
+    "editor.selectionHighlight": false,
+    "workbench.colorCustomizations": {
+    "editor.selectionBackground": "#f4f7f0"  
+    },
+    "workbench.editor.showTabs": true,
+    "emmet.triggerExpansionOnTab": true
+}
