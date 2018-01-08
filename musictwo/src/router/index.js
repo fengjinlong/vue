@@ -21,6 +21,11 @@ const Search = (resolve) => {
     resolve(module)
   })
 }
+const SingerDetail = (resolve) => {
+  import('components/singer-detail/singer-detail').then((module) => {
+    resolve(module)
+  })
+}
 
 Vue.use(Router)
 
@@ -36,7 +41,13 @@ export default new Router({
     },
     {
       path: '/singer',
-      component: Singer
+      component: Singer,
+      children: [
+        {
+          path: ':id',
+          component: SingerDetail
+        }
+      ]
     },
     {
       path: '/rank',
