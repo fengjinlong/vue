@@ -3,7 +3,7 @@
     <div class="back">
       <i class="icon-back"></i>
     </div>
-    <h1 class="title"></h1>
+    <h1 class="title" v-html="title"></h1>
     <div class="bg-image" ref="bgImage" :style="bgStyle">
       <div class="play-wrapper">
         <div ref="playBtn" class="play">
@@ -14,19 +14,17 @@
       <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <!-- <scroll :data="songs" @scroll="scroll"
-            :listen-scroll="listenScroll" :probe-type="probeType" class="list" ref="list">
+    <Scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :songs="songs" :rank="rank" @select="selectItem"></song-list>
+        <SongList :songs="songs"></SongList>
       </div>
-    </scroll> -->
+    </Scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  // import Scroll from 'base/scroll/scroll'
-  // import Loading from 'base/loading/loading'
-  // import SongList from 'base/song-list/song-list'
+  import Scroll from 'base/scroll/scroll'
+  import SongList from 'base/song-list/song-list'
   // import {prefixStyle} from 'common/js/dom'
   // import {playlistMixin} from 'common/js/mixin'
   // import {mapActions} from 'vuex'
@@ -128,11 +126,6 @@
   //       this.$refs.bgImage.style[transform] = `scale(${scale})`
   //       this.$refs.bgImage.style.zIndex = zIndex
   //     }
-  //   },
-  //   components: {
-  //     Scroll,
-  //     Loading,
-  //     SongList
   //   }
   // }
   export default {
@@ -154,10 +147,31 @@
         default: false
       }
     },
+    data () {
+      return {
+        scrollY: 0
+      }
+    },
     computed: {
       bgStyle () {
         return `background-image:url(${this.bgImage})`
       }
+    },
+    created(){
+      this.probeType = 3
+      this.listenScroll = true
+    },
+    mounted () {
+      this.$refs.list.$el.style.top = `${this.$refs.bgImage.clientHeight}px`
+    },
+    methods: {
+      scroll (pos) {
+        this.scrollY = pos.y
+      }
+    },
+    components: {
+      Scroll,
+      SongList
     }
   }
 </script>
