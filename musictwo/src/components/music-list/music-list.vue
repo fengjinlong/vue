@@ -6,7 +6,7 @@
     <h1 class="title" v-html="title"></h1>
     <div class="bg-image" ref="bgImage" :style="bgStyle">
       <div class="play-wrapper">
-        <div ref="playBtn" class="play">
+        <div ref="playBtn" class="play" v-show="songs.length > 0">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
         </div>
@@ -18,6 +18,9 @@
       <div class="song-list-wrapper">
         <SongList :songs="songs"></SongList>
       </div>
+      <div class="loading-container" v-show="!songs.length">
+        <Loading></Loading>
+      </div>
     </Scroll>
   </div>
 </template>
@@ -25,17 +28,13 @@
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import SongList from 'base/song-list/song-list'
+  import Loading from 'base/loading/loading'
   import {prefixStyle} from 'common/js/dom'
 
   const RESERVED_HEIGHT = 40
   const transform = prefixStyle('transform')
   const backdrop = prefixStyle('backdrop-filter')
 
-  //   mounted() {
-  //     this.imageHeight = this.$refs.bgImage.clientHeight
-  //     this.minTransalteY = -this.imageHeight + RESERVED_HEIGHT
-  //     this.$refs.list.$el.style.top = `${this.imageHeight}px`
-  //   },
   //   methods: {
   //     handlePlaylist(playlist) {
   //       const bottom = playlist.length > 0 ? '60px' : ''
@@ -137,7 +136,8 @@
     },
     components: {
       Scroll,
-      SongList
+      SongList,
+      Loading
     }
   }
 </script>
