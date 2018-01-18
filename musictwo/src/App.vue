@@ -4,17 +4,20 @@
     <Tab></Tab>
     <keep-alive>
       <router-view></router-view>      
-    </keep-alive> 
+    </keep-alive>
+    <Player></Player> 
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import Mheader from 'components/m-header'
 import Tab from 'components/tab/tab'
+import Player from 'components/player/player'
 export default {
   components: {
     Mheader,
-    Tab
+    Tab,
+    Player
   }
 }
 </script>
