@@ -20,7 +20,6 @@
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" ref="imageWrapper" :class="cdCls">
-                <!-- <img ref="image" :class="cdCls" class="image" :src="currentSong.image"> -->
                 <img ref="image" class="image" :src="currentSong.image">
               </div>
             </div>
@@ -81,7 +80,7 @@
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="icon">
           <div class="imgWrapper" ref="miniWrapper">
-            <!-- <img ref="miniImage" :class="cdCls" width="40" height="40" :src="currentSong.image"> -->
+            <img ref="miniImage" :class="cdCls" width="40" height="40" :src="currentSong.image">
           </div>
         </div>
         <div class="text">
@@ -282,6 +281,10 @@
               width: 100%
               height: 100%
               border-radius: 50%
+              &.play
+                animation: rotate 10s linear infinite
+              &.pause
+                animation-play-state: paused
               .image
                 position: absolute
                 left: 0
@@ -449,9 +452,10 @@
           position: absolute
           left: 0
           top: 0
+
   @keyframes rotate
     0%
-      transform: rotate(0)
+      -webkit-transform: rotate(0);transform: rotate(0)
     100%
-      transform: rotate(360deg)
+      -webkit-transform: rotate(360deg);transform: rotate(360deg)
 </style>
