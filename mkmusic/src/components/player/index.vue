@@ -31,7 +31,7 @@
               <div class="playing-lyric">{{playinglyric}}</div>
             </div>
           </div>
-          <!-- 当currentLyric不为null时传入组件 -->
+          <!-- 当currentLyric不为null时传入组订饭件 -->
           <Scroll class="middle-r"
                   ref="lyricList"
                   :data="currentLyric && currentLyric.lines">
