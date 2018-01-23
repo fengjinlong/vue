@@ -42,29 +42,31 @@
           </scroll> -->
         </div>
         <div class="bottom">
-          <div class="dot-wrapper">
+          <!-- <div class="dot-wrapper"> -->
             <!-- <span class="dot" :class="{'active':currentShow==='cd'}"></span> -->
             <!-- <span class="dot" :class="{'active':currentShow==='lyric'}"></span> -->
-          </div>
+          <!-- </div> -->
           <div class="progress-wrapper">
-            <!-- <span class="time time-l">{{format(currentTime)}}</span> -->
+            <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <!-- <progress-bar ref="progressBar" :percent="percent" @percentChange="onProgressBarChange"
-                            @percentChanging="onProgressBarChanging"></progress-bar> -->
+              <progressBar ref="progressBar" 
+                          :percent="percent" 
+                          @percentChange="onProgressBarChange"
+                          @percentChanging="onProgressBarChanging"></progressBar>
             </div>
-            <!-- <span class="time time-r">{{format(currentSong.duration)}}</span> -->
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left" >
+            <div class="icon i-left" :class="disableCls">
               <i @click="prev" class="icon-prev"></i>
             </div>
-            <div class="icon i-center" >
+            <div class="icon i-center"  :class="disableCls">
               <i @click="togglePlaying" :class="playIcon"></i>
             </div>
-            <div class="icon i-right" >
+            <div class="icon i-right"  :class="disableCls">
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
@@ -98,20 +100,23 @@
     <!-- <playlist ref="playlist"></playlist> -->
     <audio ref="audio" :src="currentSong.url" 
                         @canplay="ready"
-                        @error="error"></audio>
+                        @error="error"
+                        @timeupdate="updateTime"></audio>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import {mapGetters, mapMutations} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
+  import progressBar from 'base/progress-bar/progress-bar'
   
   const transform = prefixStyle('transform')
 
   export default {
     data () {
       return {
-        songReady: false
+        songReady: false,
+        currentTime: 0
       }
     },
     computed: {
@@ -121,8 +126,14 @@
       playIcon () {
         return this.playing ? 'icon-pause' : 'icon-play'
       },
+      disableCls () {
+        return this.songReady ? '' : 'disable'
+      },
       miniIcon () {
         return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      },
+      percent () {
+        return this.currentTime / this.currentSong.duration
       },
       ...mapGetters([
         'fullScreen',
@@ -213,7 +224,26 @@
       ready () {
         this.songReady = true
       },
-      error () {},
+      error () {
+        this.songReady = true
+      },
+      updateTime (e) {
+        this.currentTime = e.target.currentTime
+      },
+      format (interval) {
+        interval = interval | 0
+        const minute = interval / 60 | 0
+        const second = this._pad(interval % 60 | 0)
+        return `${minute}:${second}`
+      },
+      _pad (num, n = 2) {
+        let len = num.toString().length
+        while (len < n) {
+          num = '0' + num
+          len++
+        }
+        return num
+      },
       _getPosAndScale () {
         const targetWidth = 40
         const paddingLeft = 40
@@ -229,6 +259,13 @@
           scale
         }
       },
+      onProgressBarChange (percent) {
+        this.$refs.audio.currentTime = this.currentSong.duration * percent
+        if (!this.playing) {
+          this.togglePlaying()
+        }
+      },
+      onProgressBarChanging () {},
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayingState: 'SET_PLAYING_STATE',
@@ -247,6 +284,9 @@
           newPlaying ? audio.play() : audio.pause()
         })
       }
+    },
+    components: {
+      progressBar
     }
   }
 </script>
