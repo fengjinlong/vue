@@ -28,11 +28,6 @@
       this.touch = {}
     },
     methods: {
-      // progressTouchStart(e) {
-      //   this.touch.initiated = true
-      //   this.touch.startX = e.touches[0].pageX
-      //   this.touch.left = this.$refs.progress.clientWidth
-      // },
       progressTouchStart (e) {
         this.touch.initiated = true
         this.touch.startX = e.touches[0].pageX
