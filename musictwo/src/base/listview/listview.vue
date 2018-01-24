@@ -79,6 +79,7 @@
         this.$emit('select', item)
       },
       onShortcutTouchStart (e) {
+        console.log(e.target)
         let anchorIndex = getData(e.target, 'index')
         let firstTouch = e.touches[0]
         this.touch.y1 = firstTouch.pageY

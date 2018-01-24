@@ -363,10 +363,6 @@
               width: 100%
               height: 100%
               border-radius: 50%
-              &.play
-                animation: rotate 10s linear infinite
-              &.pause
-                animation-play-state: paused
               .image
                 position: absolute
                 left: 0
@@ -534,10 +530,9 @@
           position: absolute
           left: 0
           top: 0
-
   @keyframes rotate
     0%
-      -webkit-transform: rotate(0);transform: rotate(0)
+      transform: rotate(0)
     100%
-      -webkit-transform: rotate(360deg);transform: rotate(360deg)
+      transform: rotate(360deg)
 </style>
