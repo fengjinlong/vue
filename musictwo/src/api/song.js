@@ -12,6 +12,7 @@ export function getLyric (mid) {
     songmid: mid,
     platform: 'yqq',
     hostUin: 0,
+    loginUin: 0,
     needNewCode: 0,
     categoryId: 10000000,
     pcachetime: +new Date(),
