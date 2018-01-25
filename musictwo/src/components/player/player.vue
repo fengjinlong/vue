@@ -27,7 +27,7 @@
               <!-- <div class="playing-lyric">{{playingLyric}}</div> -->
             </div>
           </div>
-          <!-- <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
+          <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
             <div class="lyric-wrapper">
               <div v-if="currentLyric">
                 <p ref="lyricLine"
@@ -39,7 +39,7 @@
                 <p>{{pureMusicLyric}}</p>
               </div>
             </div>
-          </scroll> -->
+          </scroll>
         </div>
         <div class="bottom">
           <!-- <div class="dot-wrapper"> -->
