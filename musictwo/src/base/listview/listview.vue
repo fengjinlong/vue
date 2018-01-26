@@ -75,6 +75,9 @@
       this.listHeight = []
     },
     methods: {
+      refresh () {
+        this.$refs.listview.refresh()
+      },
       selectItem (item) {
         this.$emit('select', item)
       },
@@ -92,9 +95,6 @@
         let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
         let anchorIndex = parseInt(this.touch.anchorIndex) + delta
         this._scrollTo(anchorIndex)
-      },
-      refresh () {
-        this.$refs.listview.refresh()
       },
       scroll (pos) {
         this.scrollY = pos.y

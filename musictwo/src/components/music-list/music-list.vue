@@ -77,6 +77,11 @@
       this.$refs.list.$el.style.top = `${this.imageHeight}px`
     },
     methods: {
+      handlePlaylist (playlist) {
+        const bottom = playlist.length > 0 ? '60px' : 0
+        this.$refs.list.$el.style.bottom = bottom
+        this.$refs.list.refresh()
+      },
       back () {
         this.$router.back()
       },
