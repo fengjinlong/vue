@@ -214,6 +214,9 @@
           return
         }
         this.setPlayingState(!this.playing)
+        if (this.currentLyric) {
+          this.currentLyric.togglePlay()
+        }
       },
       next () {
         if (!this.songReady) {
@@ -253,6 +256,9 @@
       loop () {
         this.$refs.audio.currentTime = 0
         this.$refs.audio.play()
+        if (this.currentLyric) {
+          this.currentLyric.seek(0)
+        }
       },
       ready () {
         this.songReady = true
@@ -293,9 +299,13 @@
         }
       },
       onProgressBarChange (percent) {
-        this.$refs.audio.currentTime = this.currentSong.duration * percent
+        const currentTime = this.currentSong.duration * percent
+        this.$refs.audio.currentTime = currentTime
         if (!this.playing) {
           this.togglePlaying()
+        }
+        if (this.currentLyric) {
+          this.currentLyric.seek(currentTime * 1000)
         }
       },
       onProgressBarChanging () {},
@@ -400,6 +410,9 @@
       currentSong (newSong, oldSong) {
         if (newSong.id === oldSong.id) {
           return
+        }
+        if (this.currentLyric) {
+          this.currentLyric.stop()
         }
         this.$nextTick(() => {
           this.$refs.audio.play()
