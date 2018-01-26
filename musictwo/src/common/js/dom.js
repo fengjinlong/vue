@@ -22,6 +22,7 @@ export function getData (el, name, val) {
 }
 
 let elementStyle = document.createElement('div').style
+
 let vendor = (() => {
   let transformNames = {
     webkit: 'webkitTransform',
@@ -39,6 +40,7 @@ let vendor = (() => {
 
   return false
 })()
+
 export function prefixStyle (style) {
   if (vendor === false) {
     return false
