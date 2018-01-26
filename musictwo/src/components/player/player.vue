@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="playing-lyric-wrapper">
-              <!-- <div class="playing-lyric">{{playingLyric}}</div> -->
+              <div class="playing-lyric">{{playingLyric}}</div>
             </div>
           </div>
           <Scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
@@ -130,7 +130,8 @@
         radius: 32,
         currentLyric: null,
         currentLineNum: 0,
-        currentShow: 'cd'
+        currentShow: 'cd',
+        playingLyric: ''
       }
     },
     created () {
@@ -343,6 +344,7 @@
         } else {
           this.$refs.lyricList.scrollTo(0, 0, 1000)
         }
+        this.playingLyric = txt
       },
       middleTouchStart (e) {
         this.touch.initiated = true
@@ -360,8 +362,6 @@
         if (Math.abs(deltaY) > Math.abs(deltaX)) {
           return
         }
-        console.log(touch.pageX)
-        console.log(this.touch.startX)
         const left = this.currentShow === 'cd' ? 0 : -window.innerWidth
         const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + deltaX))
         this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
