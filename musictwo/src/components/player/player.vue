@@ -22,8 +22,8 @@
               @touchend="middleTouchEnd">
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd" ref="imageWrapper" :class="cdCls">
-                <img ref="image" class="image" :src="currentSong.image">
+              <div class="cd" :class="cdCls" ref="imageWrapper">
+                <img ref="image" class="image"  :src="currentSong.image">
               </div>
             </div>
             <div class="playing-lyric-wrapper">
@@ -518,6 +518,10 @@
               width: 100%
               height: 100%
               border-radius: 50%
+              &.play
+                animation: rotate 10s linear infinite
+              &.pause
+                animation-play-state: paused
               .image
                 position: absolute
                 left: 0
@@ -687,7 +691,7 @@
           top: 0
   @keyframes rotate
     0%
-      transform: rotate(0)
+      -webkit-transform: rotate(0);transform: rotate(0)
     100%
-      transform: rotate(360deg)
+      -webkit-transform: rotate(360deg);transform: rotate(360deg)
 </style>
