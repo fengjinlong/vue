@@ -38,9 +38,9 @@
                    :class="{'current': currentLineNum === index}"
                    v-for="(line,index) in currentLyric.lines">{{line.txt}}</p>
               </div>
-              <!-- <div class="pure-music" v-show="isPureMusic">
+              <div class="pure-music" v-show="isPureMusic">
                 <p>{{pureMusicLyric}}</p>
-              </div> -->
+              </div>
             </div>
           </Scroll>
         </div>
@@ -118,7 +118,8 @@
   import progressBar from 'base/progress-bar/progress-bar'
   import progressCircle from 'base/progress-circle/progress-circle'
   import Lyric from 'lyric-parser'
-  
+
+  const timeExp = /\[(\d{2}):(\d{2}):(\d{2})]/g
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
@@ -131,7 +132,9 @@
         currentLyric: null,
         currentLineNum: 0,
         currentShow: 'cd',
-        playingLyric: ''
+        playingLyric: '',
+        isPureMusic: false,
+        pureMusicLyric: ''
       }
     },
     created () {
@@ -338,9 +341,19 @@
       },
       getLyric () {
         this.currentSong.getLyric().then((lyric) => {
+          if (this.currentSong.lyric !== lyric) {
+            return
+          }
           this.currentLyric = new Lyric(lyric, this.handleLyric)
-          if (this.playing) {
-            this.currentLyric.play()
+          this.isPureMusic = !this.currentLyric.lines.length
+          if (this.isPureMusic) {
+            this.pureMusicLyric = this.currentLyric.lrc.replace(timeExp, '').trim()
+            this.playingLyric = this.pureMusicLyric
+          } else {
+            if (this.playing) {
+              // 这个时候有可能用户已经播放了歌曲，要切到对应位置
+              this.currentLyric.seek(this.currentTime * 1000)
+            }
           }
         }).catch(() => {
           this.currentLyric = null
