@@ -16,7 +16,7 @@
     <div class="bg-layer" ref="layer"></div>
     <Scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <SongList @select="selectItem" :songs="songs"></SongList>
+        <SongList :rank="rank" @select="selectItem" :songs="songs"></SongList>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <Loading></Loading>

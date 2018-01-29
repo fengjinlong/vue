@@ -51,8 +51,17 @@
       handlePlaylist (playlist) {
         const bottom = playlist.length ? '60px' : ''
         this.$refs.rank.style.bottom = bottom
-        this.$refs.topList.refresh()
-      }
+        this.$refs.toplist.refresh()
+      },
+      selectItem (item) {
+        this.$router.push({
+          path: `/rank/${item.id}`
+        })
+        this.setTopList(item)
+      },
+      ...mapMutations({
+        setTopList: 'SET_TOP_LIST'
+      })
     },
     components: {
       Scroll,
