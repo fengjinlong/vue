@@ -31,8 +31,11 @@
     },
     methods: {
       _getSongList () {
+        if (!this.disc.dissid) {
+          this.$router.back()
+          return
+        }
         getSongList(this.disc.dissid).then((res) => {
-          console.log(res.code)
           if (res.code === ERR_OK) {
             console.log(5555)
             this.songs = this._normalizeSongs(res.cdlist[0].songlist)
@@ -41,7 +44,6 @@
         })
       },
       _normalizeSongs (list) {
-        console.log(666)
         let ret = []
         list.forEach((musicDate) => {
           if (musicDate.songid && musicDate.albumid) {
