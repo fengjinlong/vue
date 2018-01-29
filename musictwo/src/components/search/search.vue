@@ -33,7 +33,7 @@
       <SearchBox ref="searchBox"></SearchBox>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll :refreshDelay="refreshDelay" ref="shortcut" class="shortcut" :data="shortcut">
+      <scroll ref="shortcut" class="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -60,7 +60,7 @@
 
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/search-box'
-  import {getHotkey} from 'api/search'
+  import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
 
   export default {
@@ -74,14 +74,12 @@
     },
     methods: {
       _getHotkey () {
-        getHotkey().then((res) => {
+        getHotKey().then((res) => {
           if (res.code === ERR_OK) {
+            console.log(res.data.hotKey)
             this.hotKey = res.data.hotKey.slice(0, 10)
           }
         })
-      },
-      addQuery (query) {
-        this.$refs.searchBox.setQuery(query)
       }
     },
     components: {
