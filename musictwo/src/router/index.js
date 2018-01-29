@@ -44,7 +44,7 @@ export default new Router({
       component: Recommend,
       children: [
         {
-          path: '/:id',
+          path: ':id',
           component: Disc
         }
       ]

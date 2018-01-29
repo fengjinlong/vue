@@ -1,14 +1,23 @@
 <template>
   <transition name="slide">
-    <MusicList :song="disc" :title="title" :bgImage="bgImage"></MusicList>
+    <MusicList :title="title" :bgImage="bgImage" :songs="songs"></MusicList>
   </transition>
 </template>
 <script type="text/ecmascript-6">
   import MusicList from 'components/music-list/music-list'
   import {mapGetters} from 'vuex'
+  import {getSongList} from 'api/recommend'
+  import {ERR_OK} from 'api/config'
+  import {createSong} from 'common/js/song'
   export default {
+    data () {
+      return {
+        songs: []
+      }
+    },
     computed: {
       title () {
+        console.log(this.disc)
         return this.disc.dissname
       },
       bgImage () {
@@ -18,7 +27,18 @@
         'disc'
       ])
     },
-    methods: {},
+    created () {
+      this._getSongList()
+    },
+    methods: {
+      _getSongList () {
+        getSongList().then((res) => {
+          if (res.code === ERR_OK) {
+            console.log(res)
+          }
+        })
+      }
+    },
     components: {
       MusicList
     }
