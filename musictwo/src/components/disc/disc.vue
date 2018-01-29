@@ -17,7 +17,6 @@
     },
     computed: {
       title () {
-        console.log(this.disc)
         return this.disc.dissname
       },
       bgImage () {
@@ -32,11 +31,25 @@
     },
     methods: {
       _getSongList () {
-        getSongList().then((res) => {
+        getSongList(this.disc.dissid).then((res) => {
+          console.log(res.code)
           if (res.code === ERR_OK) {
-            console.log(res)
+            console.log(5555)
+            this.songs = this._normalizeSongs(res.cdlist[0].songlist)
+            // console.log(this.songs.length)
           }
         })
+      },
+      _normalizeSongs (list) {
+        console.log(666)
+        let ret = []
+        list.forEach((musicDate) => {
+          if (musicDate.songid && musicDate.albumid) {
+            // console.log(musicDate)
+            ret.push(createSong(musicDate))
+          }
+        })
+        return ret
       }
     },
     components: {
