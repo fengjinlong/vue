@@ -30,10 +30,10 @@
   </div>-->
   <div class="search">
     <div class="search-box-wrapper">
-      <SearchBox ref="searchBox"></SearchBox>
+      <SearchBox ref="searchBox" @query="onQueryChange"></SearchBox>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll ref="shortcut" class="shortcut">
+      <Scroll ref="shortcut" class="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -53,13 +53,14 @@
             <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
           </div> -->
         </div>
-      </scroll>
+      </Scroll>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/search-box'
+  import Scroll from 'base/scroll/scroll'
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
 
@@ -76,14 +77,23 @@
       _getHotkey () {
         getHotKey().then((res) => {
           if (res.code === ERR_OK) {
-            console.log(res.data.hotKey)
-            this.hotKey = res.data.hotKey.slice(0, 10)
+            this.hotKey = res.data.hotkey.slice(0, 10)
           }
         })
+      },
+      addQuery (query) {
+        this.$refs.searchBox.setQuery(query)
+      },
+      onQueryChange () {}
+    },
+    watch: {
+      query (newQuery) {
+        if (!newQuery) {}
       }
     },
     components: {
-      SearchBox
+      SearchBox,
+      Scroll
     }
   }
 </script>
