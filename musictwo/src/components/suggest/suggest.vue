@@ -3,7 +3,9 @@
           class="suggest"
           :data="result"
           pullup="pullup"
+          :beforeScroll="beforeScroll"
           @scrollToEnd="searchMore"
+          @beforeScroll="listScroll"
   >
     <ul class="suggest-list">
       <li @click="selectItem(item)" class="suggest-item" v-for="item in result">
@@ -16,13 +18,16 @@
       </li>
       <Loading v-show="hasMore" title=""></Loading>
     </ul>
+    <div v-show="!hasMore && !result.length" class="no-result-wrapper">
+      <NoResult title="抱歉，暂无搜索结果"></NoResult>
+    </div>
   </Scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import Scroll from 'base/scroll/scroll'
   import Loading from 'base/loading/loading'
-  // import NoResult from 'base/no-result/no-result'
+  import NoResult from 'base/no-result/noresult'
   import { search } from 'api/search'
   import { ERR_OK } from 'api/config'
   // import { createSong, isValidMusic } from 'common/js/song'
@@ -49,7 +54,8 @@
         page: 1,
         result: [],
         pullup: true,
-        hasMore: true
+        hasMore: true,
+        beforeScroll: true
       }
     },
     methods: {
@@ -129,6 +135,9 @@
           this.insertSong(item)
         }
       },
+      listScroll () {
+        this.$emit('listScroll')
+      },
       ...mapMutations({
         setSinger: 'SET_SINGER'
       }),
@@ -144,7 +153,8 @@
 
     components: {
       Scroll,
-      Loading
+      Loading,
+      NoResult
     }
   }
 </script>
