@@ -55,12 +55,16 @@
         </div>
       </Scroll>
     </div>
+    <div ref="searchResult" class="search-result" v-show="query">
+      <Suggest ref="suggest" :query="query"></Suggest>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/search-box'
   import Scroll from 'base/scroll/scroll'
+  import Suggest from 'components/suggest/suggest'
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
 
@@ -70,7 +74,8 @@
     },
     data () {
       return {
-        hotKey: []
+        hotKey: [],
+        query: ''
       }
     },
     methods: {
@@ -84,7 +89,9 @@
       addQuery (query) {
         this.$refs.searchBox.setQuery(query)
       },
-      onQueryChange () {}
+      onQueryChange (query) {
+        this.query = query
+      }
     },
     watch: {
       query (newQuery) {
@@ -93,7 +100,8 @@
     },
     components: {
       SearchBox,
-      Scroll
+      Scroll,
+      Suggest
     }
   }
 </script>
