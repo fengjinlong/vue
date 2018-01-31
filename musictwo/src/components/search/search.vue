@@ -43,22 +43,23 @@
               </li>
             </ul>
           </div>
-          <!-- <div class="search-history" v-show="searchHistory.length">
+          <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
-              <span @click="showConfirm" class="clear">
+              <span class="clear" @click="clearSearchHistory">
                 <i class="icon-clear"></i>
               </span>
             </h1>
-            <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
-          </div> -->
+            <SearchList @delete="deleSearchHistory" @select="addQuery" :searches="searchHistory"></SearchList>
+          </div>
         </div>
       </Scroll>
     </div>
     <div ref="searchResult" class="search-result" v-show="query">
       <Suggest ref="suggest" 
                 :query="query"
-                @listScroll="blurInput"></Suggest>
+                @listScroll="blurInput"
+                @select="saveSearch"></Suggest>
     </div>
     <router-view></router-view>
   </div>
@@ -67,9 +68,11 @@
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/search-box'
   import Scroll from 'base/scroll/scroll'
+  import SearchList from 'base/search-list/search-list'
   import Suggest from 'components/suggest/suggest'
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
+  import { mapActions, mapGetters } from 'vuex'
 
   export default {
     created () {
@@ -80,6 +83,11 @@
         hotKey: [],
         query: ''
       }
+    },
+    computed: {
+      ...mapGetters([
+        'searchHistory'
+      ])
     },
     methods: {
       _getHotkey () {
@@ -97,7 +105,15 @@
       },
       blurInput () {
         this.$refs.searchBox.blur()
-      }
+      },
+      saveSearch () {
+        this.saveSearchHistory(this.query)
+      },
+      ...mapActions([
+        'saveSearchHistory',
+        'deleSearchHistory',
+        'clearSearchHistory'
+      ])
     },
     watch: {
       query (newQuery) {
@@ -107,7 +123,8 @@
     components: {
       SearchBox,
       Scroll,
-      Suggest
+      Suggest,
+      SearchList
     }
   }
 </script>
