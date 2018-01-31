@@ -1,33 +1,4 @@
 <template>
-  <!--<div class="search">
-    <div class="search-box-wrapper">
-      <search-box ref="searchBox" @query="onQueryChange"></search-box>
-    </div>
-    <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <scroll :refreshDelay="refreshDelay" ref="shortcut" class="shortcut" :data="shortcut">
-        <div>
-          <div class="hot-key">
-            <h1 class="title">热门搜索</h1>
-            <ul>
-              <li @click="addQuery(item.k)" class="item" v-for="item in hotKey">
-                <span>{{item.k}}</span>
-              </li>
-            </ul>
-          </div>
-          <div class="search-history" v-show="searchHistory.length">
-            <h1 class="title">
-              <span class="text">搜索历史</span>
-              <span @click="showConfirm" class="clear">
-                <i class="icon-clear"></i>
-              </span>
-            </h1>
-            <search-list @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></search-list>
-          </div>
-        </div>
-      </scroll>
-    </div>
-
-  </div>-->
   <div class="search">
     <div class="search-box-wrapper">
       <SearchBox ref="searchBox" @query="onQueryChange"></SearchBox>
@@ -61,6 +32,7 @@
                 @listScroll="blurInput"
                 @select="saveSearch"></Suggest>
     </div>
+    <Confirm></Confirm>
     <router-view></router-view>
   </div>
 </template>
@@ -68,6 +40,7 @@
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/search-box'
   import Scroll from 'base/scroll/scroll'
+  import Confirm from 'base/confirm/confirm'
   import SearchList from 'base/search-list/search-list'
   import Suggest from 'components/suggest/suggest'
   import {getHotKey} from 'api/search'
@@ -124,7 +97,8 @@
       SearchBox,
       Scroll,
       Suggest,
-      SearchList
+      SearchList,
+      Confirm
     }
   }
 </script>
