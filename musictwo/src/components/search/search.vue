@@ -4,7 +4,7 @@
       <SearchBox ref="searchBox" @query="onQueryChange"></SearchBox>
     </div>
     <div ref="shortcutWrapper" class="shortcut-wrapper" v-show="!query">
-      <Scroll ref="shortcut" class="shortcut">
+      <Scroll ref="shortcut" class="shortcut" :data="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -17,7 +17,7 @@
           <div class="search-history" v-show="searchHistory.length">
             <h1 class="title">
               <span class="text">搜索历史</span>
-              <span class="clear" @click="clearSearchHistory">
+              <span class="clear" @click="clear">
                 <i class="icon-clear"></i>
               </span>
             </h1>
@@ -32,7 +32,10 @@
                 @listScroll="blurInput"
                 @select="saveSearch"></Suggest>
     </div>
-    <Confirm></Confirm>
+    <Confirm ref="confirm" 
+              text="是否清空所有搜索历史" 
+              confirmBtnText="清空"
+              @confirm="clearSearchHistory"></Confirm>
     <router-view></router-view>
   </div>
 </template>
@@ -46,8 +49,10 @@
   import {getHotKey} from 'api/search'
   import {ERR_OK} from 'api/config'
   import { mapActions, mapGetters } from 'vuex'
+  import {playlistMixin} from 'common/js/mixin'
 
   export default {
+    mixins: [playlistMixin],
     created () {
       this._getHotkey()
     },
@@ -58,11 +63,21 @@
       }
     },
     computed: {
+      shortcut () {
+        return this.hotKey.concat(this.searchHistory)
+      },
       ...mapGetters([
         'searchHistory'
       ])
     },
     methods: {
+      handlePlaylist (playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+        this.$refs.shortcutWrapper.style.bottom = bottom
+        this.$refs.shortcut.refresh()
+        this.$refs.searchResult.style.bottom = bottom
+        this.$refs.suggest.refresh()
+      },
       _getHotkey () {
         getHotKey().then((res) => {
           if (res.code === ERR_OK) {
@@ -82,6 +97,9 @@
       saveSearch () {
         this.saveSearchHistory(this.query)
       },
+      clear () {
+        this.$refs.confirm.show()
+      },
       ...mapActions([
         'saveSearchHistory',
         'deleSearchHistory',
@@ -90,7 +108,11 @@
     },
     watch: {
       query (newQuery) {
-        if (!newQuery) {}
+        if (!newQuery) {
+          setTimeout(() => {
+            this.$refs.shortcut.refresh()
+          }, 20)
+        }
       }
     },
     components: {

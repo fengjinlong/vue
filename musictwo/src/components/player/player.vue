@@ -247,7 +247,7 @@
         if (this.playlist.length === 1) {
           this.loop()
         } else {
-          let index = this.currentIndex + 1
+          let index = this.currentIndex - 1
           if (index === -1) {
             index = this.playlist.length - 1
           }
@@ -320,7 +320,13 @@
           this.currentLyric.seek(currentTime * 1000)
         }
       },
-      onProgressBarChanging () {},
+      onProgressBarChanging (percent) {
+        console.log(888)
+        this.currentTime = this.currentSong.duration * percent
+        if (this.currentLyric) {
+          this.currentLyric.seek(this.currentTime * 1000)
+        }
+      },
       changeMode () {
         const mode = (this.mode + 1) % 3
         this.setPlayMode(mode)
