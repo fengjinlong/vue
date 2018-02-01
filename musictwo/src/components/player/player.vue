@@ -322,7 +322,6 @@
         }
       },
       onProgressBarChanging (percent) {
-        console.log(888)
         this.currentTime = this.currentSong.duration * percent
         if (this.currentLyric) {
           this.currentLyric.seek(this.currentTime * 1000)
@@ -444,6 +443,9 @@
     },
     watch: {
       currentSong (newSong, oldSong) {
+        if (!newSong.id) {
+          return
+        }
         if (newSong.id === oldSong.id) {
           return
         }
