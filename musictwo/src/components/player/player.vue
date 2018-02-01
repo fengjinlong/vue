@@ -100,7 +100,7 @@
         </div>
       </div>
     </transition>
-    <!-- <playlist ref="playlist"></playlist> -->
+    <Playlist ref="playlist"></Playlist>
     <audio ref="audio" :src="currentSong.url" 
                         @canplay="ready"
                         @error="error"
@@ -116,6 +116,7 @@
   import {shuffle} from 'common/js/util'
   import Scroll from 'base/scroll/scroll'
   import progressBar from 'base/progress-bar/progress-bar'
+  import Playlist from 'components/playlist/playlist'
   import progressCircle from 'base/progress-circle/progress-circle'
   import Lyric from 'lyric-parser'
 
@@ -429,6 +430,10 @@
         this.$refs.middleL.style.opacity = opacity
         this.$refs.middleL.style[transitionDuration] = `${time}ms`
       },
+      // 歌单列表
+      showPlaylist () {
+        this.$refs.playlist.show()
+      },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayingState: 'SET_PLAYING_STATE',
@@ -460,7 +465,8 @@
     components: {
       progressBar,
       progressCircle,
-      Scroll
+      Scroll,
+      Playlist
     }
   }
 </script>
