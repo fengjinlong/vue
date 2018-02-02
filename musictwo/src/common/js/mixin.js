@@ -92,3 +92,34 @@ export const playerMixin = {
     ])
   }
 }
+
+export const searchMixin = {
+  data () {
+    return {
+      query: ''
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'searchHistory'
+    ])
+  },
+  methods: {
+    addQuery (query) {
+      this.$refs.searchBox.setQuery(query)
+    },
+    blurInput () {
+      this.$refs.searchBox.blur()
+    },
+    saveSearch () {
+      this.saveSearchHistory(this.query)
+    },
+    onQueryChange (query) {
+      this.query = query
+    },
+    ...mapActions([
+      'saveSearchHistory',
+      'deleSearchHistory'
+    ])
+  }
+}
