@@ -86,6 +86,7 @@
       },
       selectItem (item, index) {
         if (this.mode === playMode.random) {
+          console.log(this.playlist)
           index = this.playlist.findIndex((song) => {
             return song.id === item.id
           })
