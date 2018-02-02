@@ -109,7 +109,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import animations from 'create-keyframe-animation'
   import {prefixStyle} from 'common/js/dom'
   import {playMode} from 'common/js/config'
@@ -269,6 +269,7 @@
       },
       ready () {
         this.songReady = true
+        this.savePlayHistory(this.currentSong)
       },
       error () {
         this.songReady = true
@@ -411,11 +412,10 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN'
-        // setPlayingState: 'SET_PLAYING_STATE',
-        // setCurrentIndex: 'SET_CURRENT_INDEX',
-        // setPlayMode: 'SET_PLAY_MODE',
-        // setPlayList: 'SET_PLAYLIST'
-      })
+      }),
+      ...mapActions([
+        'savePlayHistory'
+      ])
     },
     watch: {
       currentSong (newSong, oldSong) {
