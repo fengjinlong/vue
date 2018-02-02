@@ -35,8 +35,8 @@ export const playerMixin = {
       'sequenceList',
       'playlist',
       'currentSong',
-      'mode',
-      'favoriteList'
+      'mode'
+      // 'favoriteList'
     ]),
     favoriteIcon () {
       return this.getFavoriteIcon(this.currentSong)

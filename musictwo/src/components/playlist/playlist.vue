@@ -21,9 +21,9 @@
                 :key="item.id">
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text">{{item.name}}</span>
-              <span @click.stop="toggleFavorite(item)" class="like">
+              <!-- <span @click.stop="toggleFavorite(item)" class="like">
                 <i :class="getFavoriteIcon(item)"></i>
-              </span>
+              </span> -->
               <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
               </span>
@@ -52,7 +52,7 @@
   import Confirm from 'base/confirm/confirm'
   // import addSong from 'components/add-song/add-song'
   import {playerMixin} from 'common/js/mixin'
-  import {mapActions, mapMutations} from 'vuex'
+  import {mapActions} from 'vuex'
 
   export default {
     mixins: [playerMixin],
@@ -86,7 +86,6 @@
       },
       selectItem (item, index) {
         if (this.mode === playMode.random) {
-          console.log(this.playlist)
           index = this.playlist.findIndex((song) => {
             return song.id === item.id
           })
@@ -94,14 +93,11 @@
         this.setCurrentIndex(index)
         this.setPlayingState(true)
       },
-      ...mapMutations({
-        setPlayingState: 'SET_PLAYING_STATE'
-      }),
       scrollToCurrent (current) {
         const index = this.sequenceList.findIndex((song) => {
           return current.id === song.id
         })
-        this.$refs.listContent.scrollToElement(this.$refs.listItem[index], 300)
+        this.$refs.listContent.scrollToElement(this.$refs.list.$el.children[index], 300)
       },
       deleteOne (item) {
         this.deleteSong(item)
