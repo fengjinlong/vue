@@ -54,14 +54,18 @@
        <div class="shortcut" v-show="!query"> 
          <!-- <switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switches>  -->
          <div class="list-wrapper"> 
-           <Scroll ref="songList" v-if="currentIndex===0" class="list-scroll" :data="playHistory"> 
+           <Scroll ref="songList" v-if="1" 
+           class="list-scroll" 
+           :data="playHistory"> 
              <div class="list-inner"> 
                <!-- <song-list :songs="playHistory" @select="selectSong">  -->
                </song-list> 
              </div> 
            </Scroll> 
-           <Scroll :refreshDelay="refreshDelay" ref="searchList" v-if="currentIndex===1" class="list-scroll" 
-                   :data="searchHistory"> 
+           <Scroll :refreshDelay="refreshDelay" 
+           ref="searchList"
+           class="list-scroll" 
+          :data="searchHistory"> 
              <div class="list-inner"> 
                <!-- <search-list @delete="deleteSearchHistory" @select="addquery" :searches="searchHistory"></search-list>  -->
              </div> 
