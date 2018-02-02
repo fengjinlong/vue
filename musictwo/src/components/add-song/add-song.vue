@@ -52,7 +52,10 @@
          <SearchBox @query="onQueryChange" ref="searchBox" placeholder="搜索歌曲"></SearchBox> 
        </div> 
        <div class="shortcut" v-show="!query"> 
-         <!-- <switches :switches="switches" :currentIndex="currentIndex" @switch="switchItem"></switches>  -->
+         <Switches 
+          :switches="switches" 
+          :currentIndex="currentIndex" 
+          @switch="switchItem"></Switches> 
          <div class="list-wrapper"> 
            <Scroll ref="songList" v-if="1" 
            class="list-scroll" 
@@ -93,7 +96,7 @@
   // import SongList from 'base/song-list'
   // import SearchList from 'base/search-list/search-list'
   import Scroll from 'base/scroll/scroll'
-  // import Switches from 'base/switches/switches'
+  import Switches from 'base/switches/switches'
   // import TopTip from 'base/top-tip/top-tip'
   import Suggest from 'components/suggest/suggest'
   // import {mapGetters, mapActions} from 'vuex'
@@ -105,7 +108,12 @@
     data () {
       return {
         showFlag: false,
-        showSinger: false
+        showSinger: false,
+        currentIndex: 0,
+        switches: [
+          {name: '最近播放'},
+          {name: '搜索历史'}
+        ]
       }
     },
     methods: {
@@ -122,7 +130,8 @@
     components: {
       Scroll,
       SearchBox,
-      Suggest
+      Suggest,
+      Switches
     }
   }
 </script>
