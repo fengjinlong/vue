@@ -1,3 +1,4 @@
+
 import storage from 'good-storage'
 
 const SEARCH_KEY = '_search_'

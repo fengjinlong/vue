@@ -1,48 +1,4 @@
-<!-- <template>
-  <transition name="slide" >
-    <div class="add-song" v-show="showFlag" @click.stop>
-      <div class="header">
-        <h1 class="title">添加歌曲到列表</h1>
-        <div class="close" @click="hide">
-          <i class="icon-close"></i>
-        </div>
-      </div>
-      <div class="search-box-wrapper">
-        <SearchBox ref="searchBox" @query="onQueryChange" placeholder="搜索歌曲"></SearchBox>
-      </div>
-      <div class="shortcut" v-show="!query">
-        <Switches @switch="switchItem" :currentIndex="currentIndex" :switches="switches"></Switches>
-      </div>
-      <div class="list-wrapper">
-        <Scroll v-if="currentIndex===0" 
-                :data="playHistory"
-                class="list-scroll"
-                ref="songList">
-          <div class="list-inner">
-            <SongList :songs="playHistory"
-                      @select="selectSong"></SongList>
-          </div>
-        </Scroll>
-        <Scroll :refreshDelay="refreshDelay" ref="searchList" class="list-scroll" v-if="currentIndex===1" :data="searchHistory">
-          <SearchList @delete="deleteSearchHistory" @select="addquery" :searches="searchHistory"></SearchList>
-        </Scroll>
-      </div>
-      <div class="search-result" v-show="query">
-        <Suggest :query="query"
-                 :showSinger="showSinger"
-                 @select="selectSuggest"
-                 @listScroll="blurInput"
-                 ></Suggest>
-      </div>
-      <TopTip ref="topTip">
-        <div class="tip-title">
-          <i class="icon-ok"></i>
-          <span class="text">1首歌曲已经添加到播放列表</span>
-        </div>
-      </TopTip>
-    </div>
-  </transition>
-</template> -->
+
  <template> 
    <transition name="slide"> 
     <div class="add-song" v-show="showFlag" @click.stop> 
