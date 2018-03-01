@@ -21,9 +21,9 @@
                 :key="item.id">
               <i class="current" :class="getCurrentIcon(item)"></i>
               <span class="text">{{item.name}}</span>
-              <!-- <span @click.stop="toggleFavorite(item)" class="like">
+              <span @click.stop="toggleFavorite(item)" class="like">
                 <i :class="getFavoriteIcon(item)"></i>
-              </span> -->
+              </span>
               <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon-delete"></i>
               </span>

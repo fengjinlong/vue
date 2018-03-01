@@ -15,14 +15,13 @@
          <div class="list-wrapper"> 
            <Scroll ref="songList" v-if="currentIndex===0" class="list-scroll" :data="playHistory"> 
              <div class="list-inner"> 
-               <SongList :songs="playHistory" @select="selectSong"> 
-               </SongList> 
+               <SongList :songs="playHistory" @select="selectSong"></SongList> 
              </div> 
            </Scroll> 
            <Scroll :refreshDelay="refreshDelay" ref="searchList" v-if="currentIndex===1" class="list-scroll" 
                    :data="searchHistory"> 
              <div class="list-inner"> 
-               <!-- <SearchList @delete="deleteSearchHistory" @select="addquery" :searches="searchHistory"></SearchList>  -->
+               <SearchList @delete="deleteSearchHistory" @select="addQuery" :searches="searchHistory"></SearchList> 
              </div> 
            </Scroll> 
          </div> 
@@ -43,7 +42,7 @@
 <script type="text/ecmascript-6">
   import SearchBox from 'base/search-box/search-box'
   import SongList from 'base/song-list/song-list'
-  // import SearchList from 'base/search-list/search-list'
+  import SearchList from 'base/search-list/search-list'
   import Scroll from 'base/scroll/scroll'
   import Switches from 'base/switches/switches'
   import Toptip from 'base/top-tip/top-tip'
@@ -74,6 +73,13 @@
     methods: {
       show () {
         this.showFlag = true
+        setTimeout(() => {
+          if (this.currentIndex === 0) {
+            this.$refs.songList.refresh()
+          } else {
+            this.$refs.searchList.refresh()
+          }
+        }, 20)
       },
       hide () {
         this.showFlag = false
@@ -104,7 +110,7 @@
       Suggest,
       Switches,
       SongList,
-      // SearchList,
+      SearchList,
       Toptip
     }
   }

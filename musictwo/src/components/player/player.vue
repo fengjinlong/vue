@@ -73,7 +73,9 @@
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+              <i class="icon"
+                :class="getFavoriteIcon(currentSong)"
+                @click="toggleFavorite(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -268,8 +270,15 @@
         }
       },
       ready () {
+        clearTimeout(this.timer)
+        // 监听 playing 这个事件可以确保慢网速或者快速切换歌曲导致的 DOM Exception
         this.songReady = true
+        this.canLyricPlay = true
         this.savePlayHistory(this.currentSong)
+      // 如果歌曲的播放晚于歌词的出现，播放的时候需要同步歌词
+        if (this.currentLyric && !this.isPureMusic) {
+          this.currentLyric.seek(this.currentTime * 1000)
+        }
       },
       error () {
         this.songReady = true

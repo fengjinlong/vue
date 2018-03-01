@@ -36,6 +36,11 @@ const TopList = (resolve) => {
     resolve(module)
   })
 }
+const UserCenter = (resolve) => {
+  import('components/user-center/user-center').then((module) => {
+    resolve(module)
+  })
+}
 Vue.use(Router)
 
 export default new Router({
@@ -83,6 +88,10 @@ export default new Router({
           component: SingerDetail
         }
       ]
+    },
+    {
+      path: '/user',
+      component: UserCenter
     }
   ]
 })
