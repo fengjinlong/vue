@@ -39,7 +39,7 @@
                    v-for="(line,index) in currentLyric.lines">{{line.txt}}</p>
               </div>
               <div class="pure-music" v-show="isPureMusic">
-                <p>{{pureMusicLyric}}</p>
+                <!-- <p>{{pureMusicLyric}}</p> -->
               </div>
             </div>
           </Scroll>
@@ -103,9 +103,10 @@
       </div>
     </transition>
     <Playlist ref="playlist"></Playlist>
-    <audio ref="audio" :src="currentSong.url" 
-                        @canplay="ready"
+    <audio ref="audio" :src="currentSong.url"
+                        @pause="paused"
                         @error="error"
+                        @playing="ready"
                         @timeupdate="updateTime"
                         @ended="end"></audio>
   </div>
@@ -225,6 +226,7 @@
         }
         if (this.playlist.length === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex + 1
           if (index === this.playlist.length) {
@@ -243,6 +245,7 @@
         }
         if (this.playlist.length === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex - 1
           if (index === -1) {
@@ -282,6 +285,12 @@
       },
       error () {
         this.songReady = true
+      },
+      paused () {
+        this.setPlayingState(false)
+        if (this.currentLyric) {
+          this.currentLyric.stop()
+        }
       },
       updateTime (e) {
         this.currentTime = e.target.currentTime
@@ -428,19 +437,27 @@
     },
     watch: {
       currentSong (newSong, oldSong) {
-        if (!newSong.id) {
+        if (!newSong.id || !newSong.url || newSong.id === oldSong.id) {
           return
         }
-        if (newSong.id === oldSong.id) {
-          return
-        }
+        this.songReady = false
+        this.canLyricPlay = false
         if (this.currentLyric) {
           this.currentLyric.stop()
+          // 重置为null
+          this.currentLyric = null
+          this.currentTime = 0
+          this.playingLyric = ''
+          this.currentLineNum = 0
         }
-        setTimeout(() => {
-          this.$refs.audio.play()
-          this.getLyric()
-        }, 1000)
+        this.$refs.audio.src = newSong.url
+        this.$refs.audio.play()
+        // 若歌曲 5s 未播放，则认为超时，修改状态确保可以切换歌曲。
+        clearTimeout(this.timer)
+        this.timer = setTimeout(() => {
+          this.songReady = true
+        }, 5000)
+        this.getLyric()
       },
       playing (newPlaying) {
         const audio = this.$refs.audio
