@@ -29,6 +29,7 @@
       ])
     },
     created () {
+      console.log(this.$route.params)
       this._getDetail()
     },
     methods: {

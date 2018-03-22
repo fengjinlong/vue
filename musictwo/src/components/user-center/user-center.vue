@@ -54,6 +54,15 @@
         ]
       }
     },
+    created () {
+      console.log('created')
+    },
+    deactivated () {
+      console.log('deactivated')
+    },
+    activated () {
+      console.log('activated')
+    },
     computed: {
       ...mapGetters([
         'favoriteList',
